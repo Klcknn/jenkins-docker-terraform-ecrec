@@ -1,0 +1,29 @@
+@use "/src/styles/variables" as v;
+
+.type-properties {
+  h5 {
+    color: v.$color1;
+  }
+
+  .custom-card svg {
+    font-size: 50px;
+  }
+
+  .custom-card {
+    height: 16rem;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+
+    .icon-box {
+      border-radius: 50%;
+      background-color: #a30000;
+      width: 66px;
+      height: 66px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

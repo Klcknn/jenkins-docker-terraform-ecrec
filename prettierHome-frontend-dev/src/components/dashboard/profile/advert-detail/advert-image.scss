@@ -1,0 +1,33 @@
+@use "../../../../styles/variables" as v;
+
+.images-container{
+    background-color: v.$color5-light;
+    border-radius: 15px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-top: 20px;
+    box-shadow: 0 0 3px v.$color5;
+    display: flex;
+    justify-content: center;
+    padding-left: 0 !important;
+    padding-right: 0!important;
+    margin-left: 0!important;
+    margin-right: 0!important;
+    
+    
+.galleria{
+  border-radius: 15px;
+  overflow: hidden;
+ width: 95% !important;
+ padding-left: 0 !important;
+ padding-right: 0!important;
+ margin-left: 0!important;
+ margin-right: 0!important;
+
+}
+    
+   
+
+    
+   
+}
