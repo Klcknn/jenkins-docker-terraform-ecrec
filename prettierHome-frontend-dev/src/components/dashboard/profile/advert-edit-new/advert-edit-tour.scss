@@ -1,6 +1,13 @@
 @use "../../../../styles/variables" as v;
 
-
+//advert edit'te Fieldset yapısı kullanıldığı zaman,
+//TODO
+// 70% width çok küçük kalıyor o yüzden 100% yaptık.
+.admin-advert-edit-tour-container {
+  .tour-request-container {
+    width: 100% !important;
+  }
+}
 .tour-request-container {
   width: 70% !important;
 
@@ -24,8 +31,6 @@
           // background-color: v.$color8;
           // color: v.$color6;
           background: none;
-
-         
 
           .p-column-header-content {
             display: flex;
@@ -71,7 +76,7 @@
             margin-bottom: 3rem;
             div {
               display: flex;
-              justify-content: center!important;
+              justify-content: center !important;
               align-items: center;
             }
           }
@@ -85,6 +90,19 @@
 
             @media screen and (max-width: 992px) {
               flex-flow: wrap;
+            }
+            .btn-delete {
+              padding: 15px;
+              margin-right: 15px;
+              background-color: v.$color9;
+              border: 1px solid v.$color9;
+              border-radius: 50%;
+              &:last-child {
+                &:hover {
+                  border-color: v.$color-success-dark;
+                  background-color: red;
+                }
+              }
             }
 
             .btn-link {
@@ -178,7 +196,12 @@
   }
 }
 
-.tr-datatable-wrapper .tr-datatable .p-datatable-tbody>tr>td .p-column-title {
+.tr-datatable-wrapper
+  .tr-datatable
+  .p-datatable-tbody
+  > tr
+  > td
+  .p-column-title {
   display: none;
 }
 
@@ -193,13 +216,12 @@
 // }
 
 @media screen and (max-width: 768px) {
-
-  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-thead>tr>th,
-  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tfoot>tr>td {
+  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-thead > tr > th,
+  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tfoot > tr > td {
     display: none !important;
   }
 
-  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td {
+  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody > tr > td {
     text-align: left;
     display: block;
     width: 100%;
@@ -208,7 +230,12 @@
     border: 0 none;
   }
 
-  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td .p-column-title {
+  .tr-datatable-wrapper
+    .p-datatable.tr-datatable
+    .p-datatable-tbody
+    > tr
+    > td
+    .p-column-title {
     padding: 0.4rem;
     min-width: 30%;
     display: inline-block;
@@ -216,7 +243,11 @@
     font-weight: bold;
   }
 
-  .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td:last-child {
+  .tr-datatable-wrapper
+    .p-datatable.tr-datatable
+    .p-datatable-tbody
+    > tr
+    > td:last-child {
     border-bottom: 1px solid var(--surface-d);
   }
 }

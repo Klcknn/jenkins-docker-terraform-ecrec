@@ -22,6 +22,23 @@ import TourRequestDetailsPage from "../pages/dashboard/profile/tour-request-deta
 import NewAdvertPage from "../pages/dashboard/profile/new-advert-page";
 import EditAdvertPage from "../pages/dashboard/profile/edit-advert-page";
 import AdvertPage from "../pages/advert-page";
+import Error401Page from "../pages/errors/error-401";
+import Error404Page from "../pages/errors/error-404";
+import AdminAdvertTypeNew from "../pages/dashboard/admin/admin-advert-type-new";
+import AdminAdvertTypeEdit from "../pages/dashboard/admin/admin-advert-type-edit";
+import AdminAdvertTypes from "../pages/dashboard/admin/admin-advert-types";
+import AdminAdvertsPage from "../pages/dashboard/admin/admin-adverts-page";
+import AdminAdvertsEdit from "../pages/dashboard/admin/admin-adverts-edit";
+import AdminUserEditPage from "../pages/dashboard/admin/admin-user-edit-page";
+import UsersPage from "../pages/dashboard/admin/admin-users-page";
+import AdminReportsPage from "../pages/dashboard/admin/admin-reports-page";
+import ResetDatabasePage from "../pages/dashboard/admin/reset-database-page";
+import AdminContactMessageListPage from "../pages/dashboard/admin/admin-contact-message-list-page";
+import AdminCategoryListPage from "../pages/dashboard/admin/admin-category-list-page";
+import AdminCategoryNewPage from "../pages/dashboard/admin/admin-category-new-page";
+import AdminTourRequestPage from "../pages/dashboard/admin/admin-tour-request-page";
+import AdminTourRequestDetail from "../components/dashboard/admin/tour-requests/admin-tour-request-detail";
+import AdminCategoryEditPage from "../pages/dashboard/admin/admin-category-edit-page";
 
 
 const router = createBrowserRouter([
@@ -42,7 +59,7 @@ const router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        path: "properties",
+        path: "ad/:query",
         element: <AdvertPage />,
       },
       {
@@ -98,10 +115,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: ":slug",
-        element: <AdvertDetailPage />,
-      },
-      {
         path: "tour-request-details",
         element: <TourRequestDetailsPage />,
       },
@@ -120,10 +133,29 @@ const router = createBrowserRouter([
             <EditAdvertPage />
           </PrivateRoute>
         ),
+           children: [
+          {
+            index: true,
+            element: <EditAdvertPage />,
+          },
+          {
+            path: "my-adverts/:slug",
+            element: <AdvertDetailPage />,
+          },
+        ],
 
+      },
+      {
+        path: "unauthorized",
+        element: <Error401Page />,
+      },
+      {
+        path: "*",
+        element: <Error404Page />,
       },
     ],
   },
+
   {
     path: "/dashboard",
     element: (
@@ -134,8 +166,80 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AdminDashboardPage />,
+        element: <AdminDashboardPage />
       },
+      {
+        path: "categories",
+        children: [
+          {
+            index: true,
+            element: <AdminCategoryListPage />
+          },
+          {
+            path: "category-new",
+            element: <AdminCategoryNewPage />
+          },
+          {
+            path: "category-edit",
+            element: <AdminCategoryEditPage />
+          }
+        ]
+      },
+      {
+        path: "tour-requests",
+        children: [
+          {
+            index: true,
+            element: <AdminTourRequestPage />
+          },
+          {
+            path: "admin-tour-request-detail",
+            element: <AdminTourRequestDetail />
+          }
+        ],
+      },
+      {
+        path: "users",
+        element: <UsersPage />,
+      },
+      {
+        path: "advert-type-new",
+        element: <AdminAdvertTypeNew />,
+      },
+      {
+        path: "advert-type-edit",
+        element: <AdminAdvertTypeEdit />,
+      },
+      {
+        path: "advert-types",
+        element: <AdminAdvertTypes />,
+      },
+      {
+        path: "adverts",
+        element: <AdminAdvertsPage />,
+      },
+      {
+        path: "adverts-edit-admin",
+        element: <AdminAdvertsEdit />,
+      }
+
+        path: "users/admin-user-edit",
+        element: <AdminUserEditPage />,
+      },
+      {
+        path: "reports",
+        element: <AdminReportsPage />,
+      },
+      {
+        path: "settings",
+        element: <ResetDatabasePage />,
+      },
+      {
+        path: "contact-messages",
+        element: <AdminContactMessageListPage />,
+      }
+
+
     ],
   },
 ]);

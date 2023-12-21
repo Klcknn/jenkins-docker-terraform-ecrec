@@ -1,21 +1,19 @@
 @use "../../styles/variables" as v;
 
 .nav {
-  // background-color: v.$color3;
-  a{
+  a {
     color: v.$color2;
     text-decoration: none;
 
-    &:hover{
+    &:hover {
       color: v.$color1;
     }
   }
 }
-  
+
 .navigation {
   margin-right: 8%;
 }
-
 
 .container .navbar-collapse .userdrop .nav-link {
   display: flex;
@@ -23,6 +21,4 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-
-
 }

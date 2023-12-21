@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import UserProfile from "./user-Profile";
 
 const Menubar = () => {
-  // HEADER COLOR MODE
   const { isUserLogin } = useSelector((state) => state.auth);
   const [mode, setMode] = useState("white");
 
@@ -56,7 +55,7 @@ const Menubar = () => {
               <Nav.Link as={Link} to="/">
                 Home
               </Nav.Link>
-              <Nav.Link as={Link} to="/properties">
+              <Nav.Link as={Link} to="/ad/search">
                 Properties
               </Nav.Link>
               <Nav.Link as={Link} to="/about">

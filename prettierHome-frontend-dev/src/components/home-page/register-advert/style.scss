@@ -31,3 +31,15 @@
     }
   }
 }
+
+.circle {
+  background-color: #f7c181 !important;
+  border-radius: 50% !important;
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

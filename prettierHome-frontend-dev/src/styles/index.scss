@@ -7,15 +7,14 @@
 @import "sweetalert2/src/variables";
 @import "sweetalert2/src/sweetalert2";
 
+@import "primereact/resources/themes/lara-light-indigo/theme.css";
+@import "primereact/resources/primereact.min.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
 
-@import "primereact/resources/themes/lara-light-indigo/theme.css";   
-@import "primereact/resources/primereact.min.css";                   
-@import "primeicons/primeicons.css";           
-@import "primeflex/primeflex.css";                   
-
-@import "primereact/resources/themes/lara-light-indigo/theme.css";   
-@import "primereact/resources/primereact.min.css";                   
-@import "primeicons/primeicons.css";           
+@import "primereact/resources/themes/lara-light-indigo/theme.css";
+@import "primereact/resources/primereact.min.css";
+@import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 
 * {
@@ -27,9 +26,9 @@ html {
   scroll-behavior: auto !important;
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
+// Eğer herhangi bir kayma varsa sağdan veya soldan, aşağıdaki kod bloğu kullanılacak //
 
-
+// html,
+// body {
+//   overflow-x: hidden;
+// }

@@ -1,24 +1,21 @@
 @use "../../styles/variables" as v;
 
-
 .top-side {
   background-color: v.$color5;
   padding: 5px;
-  z-index: 1;
+  z-index: 1001;
   position: sticky;
   top: 0;
 
-  .row{
-
+  .row {
     display: flex;
     align-items: center;
 
-    .col{
-
-      display:  flex;
+    .col {
+      display: flex;
       align-items: center;
       padding: 5px;
-      
+
       .menu-icon {
         background: v.$color6;
         border: 1px solid v.$color6;
@@ -31,18 +28,10 @@
         margin-left: 10px;
       }
 
-
       .home-col {
-
         color: v.$color2;
         margin-left: 10px;
-
-
       }
     }
-
   }
- 
-
 }
-

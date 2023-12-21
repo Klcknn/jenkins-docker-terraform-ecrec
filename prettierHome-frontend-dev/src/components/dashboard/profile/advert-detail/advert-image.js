@@ -9,7 +9,6 @@ const AdvertImage = () => {
   const { currentRecord } = useSelector((state) => state.misc);
   const id = currentRecord?.id;
   const [images, setImages] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
   console.log(images)
 
   const fetchData = async (id) => {
@@ -46,6 +45,7 @@ const AdvertImage = () => {
   const itemTemplate = (item) => {
     return (
       <img
+      className="item-template-image"
         src={`data:${item.type};base64, ${item.data}`}
         alt={item.name}
         style={{ width: "100%", height: "90%" }}
@@ -55,6 +55,7 @@ const AdvertImage = () => {
   const thumbnailTemplate = (item) => {
     return (
       <img
+      className="thumbnail-image"
         src={`data:${item.type};base64, ${item.data}`}
         alt={`Thumbnail ${item.name}`}
         style={{ width: '100%', cursor: 'pointer'  }}
@@ -69,7 +70,7 @@ const AdvertImage = () => {
         value={images}
         responsiveOptions={responsiveOptions}
         numVisible={5}
-        style={{ maxWidth: '640px' }}
+        style={{ maxWidth: '100%' }}
         item={itemTemplate}
         thumbnail={thumbnailTemplate}
       />

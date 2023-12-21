@@ -11,6 +11,7 @@ const InputSelect = ({
   handleDisable,
   handleChange,
   feedback = true,
+  optionValue = false,
 }) => {
   return (
     <Form.Group className="form-select-class">
@@ -25,9 +26,10 @@ const InputSelect = ({
         isValid={feedback && isValid(formik, field)}
         disabled={handleDisable}
       >
-        <option value="0" disabled>
-          Select {label}
-        </option>
+        <option disabled value={optionValue ? "10" : "0"} >
+        Select {label}
+      </option>
+
         {options &&
           options.map((option) => (
             <option key={option.id} value={option.id}>

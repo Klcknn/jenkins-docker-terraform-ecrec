@@ -6,10 +6,8 @@ import AdminCategoryList from '../../../components/dashboard/admin/categories/ad
 const AdminCategoryListPage = () => {
   return (
     <>
-    {/*<PageHeader title="ADMİN CATEGORY LIST" />*/}
-    <Spacer minHeight={50} />
+    <Spacer minHeight={25} />
     <AdminCategoryList/>
-    <Spacer />
   </>
   )
 }

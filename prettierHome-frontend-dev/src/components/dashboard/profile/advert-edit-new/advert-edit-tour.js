@@ -21,11 +21,14 @@ import {
 } from "../../../../helpers/function/format-date-time";
 import { useToast } from "../../../../store/providers/toast-provider";
 
-const AdvertEditTour = ({ advertId = 1 }) => {
+const AdvertEditTour = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [tour, setTour] = useState([]);
-  const { listRefreshToken } = useSelector((state) => state.misc);
+  const { listRefreshToken, currentRecord } = useSelector(
+    (state) => state.misc
+  );
+
   const dispatch = useDispatch();
   const { showToast } = useToast();
   // CONFIRM & TOAST
@@ -109,7 +112,11 @@ const AdvertEditTour = ({ advertId = 1 }) => {
 
   const loadData = async (page) => {
     try {
-      const resp = await getTourRequestByAdvert(advertId, page, lazyState.rows);
+      const resp = await getTourRequestByAdvert(
+        currentRecord.id,
+        page,
+        lazyState.rows
+      );
       setTour(resp.content);
       setTotalRows(resp.totalElements);
     } catch (err) {

@@ -122,3 +122,22 @@ export const declineTourRequest = async (tourRequestId) => {
   return data;
 };
 
+// S02 Get all tour request bt Admin and Manager
+// for admin-tour-request
+export const getAllTourRequestByAdminManager = async (
+  page = 0,
+  size = 10,
+  sort = "tourDate",
+  type = "desc",
+  query 
+) => {
+
+  const resp = await axios.get(`${baseURL}/tour-requests/admin?page=${page}&size=${size}&sort=${sort}&type=${type}&query=${query}`, {
+    headers: getAuthHeader(),
+  });
+  
+  const data = resp.data;
+  return data;
+
+}
+

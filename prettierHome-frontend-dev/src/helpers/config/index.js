@@ -22,5 +22,20 @@ export const config = {
     myAdverts: ["ADMIN","MANAGER","CUSTOMER"],
     myFavorites: ["ADMIN","MANAGER","CUSTOMER"],
     dashboard: ["ADMIN","MANAGER"]
-}
+},
+  selectRoles:{
+    roles:["ADMIN","MANAGER","CUSTOMER"]
+},
+ advertsCategory:{
+  category:["House","Apartment","Office","Villa","Land","Shop"]
+},
+advertsType:{
+  type:["Rent","Sale"]
+},
+advertsStatus:{
+  status:["PENDING","ACTIVATED","REJECTED"]
+},
+tourRequestStatus:{
+  status:["PENDING","APPROVED","DECLINED","CANCELED"]
+},
 };

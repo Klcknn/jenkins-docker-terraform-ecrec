@@ -1,6 +1,14 @@
 @use "../../../../styles/variables" as v;
 
-
+//advert edit'te Fieldset yapısı kullanıldığı zaman,
+//TODO
+// 70% width çok küçük kalıyor o yüzden 100% yaptık.
+.gallery {
+  .advert-image,
+  .display-image {
+    width: 100% !important;
+  }
+}
 .advert-image {
   width: 70% !important;
 
@@ -70,11 +78,11 @@
             border-radius: 50%;
           }
 
-          &:hover input~.checkmark {
+          &:hover input ~ .checkmark {
             background-color: #ff9080;
           }
 
-          input:checked~.checkmark {
+          input:checked ~ .checkmark {
             background-color: #b81902;
           }
 
@@ -84,7 +92,7 @@
             display: none;
           }
 
-          input:checked~.checkmark:after {
+          input:checked ~ .checkmark:after {
             display: block;
           }
 
@@ -105,7 +113,6 @@
 
     input {
       display: none;
-
     }
 
     .image-feedback {

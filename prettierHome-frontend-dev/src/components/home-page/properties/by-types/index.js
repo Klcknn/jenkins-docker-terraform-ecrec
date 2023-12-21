@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./style.scss";
 import { Card, Container } from "react-bootstrap";
 import { getAdvertsByCategories } from "../../../../api/adverts-service";
 import { Toast } from "primereact/toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Link } from "react-router-dom";
+import "swiper/css";
+import "./style.scss";
 
 const ExplorePropertiesByType = () => {
   const [loading, setLoading] = useState(false);
@@ -25,8 +26,7 @@ const ExplorePropertiesByType = () => {
         life: 3000,
       });
     }
-  }
-
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -44,8 +44,9 @@ const ExplorePropertiesByType = () => {
 
           <Swiper
             spaceBetween={10}
-            slidesPerView={2}
+            slidesPerView={1}
             breakpoints={{
+              576: { slidesPerView: 1 },
               768: { slidesPerView: 2 },
               992: { slidesPerView: 3 },
               1200: { slidesPerView: 4 },
@@ -53,30 +54,30 @@ const ExplorePropertiesByType = () => {
           >
             {categories.map((category, index) => (
               <SwiperSlide key={index}>
-
-                <Card className="custom-card" key={index}>
-                  {/* <Card.Img
-                    variant="top"
-                    src="https://archivaldesigns.com/cdn/shop/products/Peach-Tree-Front_1200x.jpg?v=1648224612"
-                    alt="Card image"
-                  /> */}
-                  <Card.Body className="">
-                    <div className="icon-box ms-2 mb-4">
-                      <FontAwesomeIcon icon={category.icon} />
-                    </div>
-                    <div className="">
-                      <Card.Title className="">{category.categoryName}</Card.Title>
-                      <Card.Subtitle className="">{category.categoryQuantity}</Card.Subtitle>
-                    </div>
-                  </Card.Body>
+                <Card className="by-types-card" key={index}>
+                  <Card.Img
+                    src={`images/icons/icon-office.jpg`}
+                    className="by-types-card-img"
+                    alt="cities card"
+                  />
+                  <Card.ImgOverlay className="d-flex  justify-content-between ">
+                    <Card.Title className="by-types-card-anchor">
+                      <span
+                        as={Link}
+                        to="/"
+                        className="by-types-card-anchor-link"
+                      >
+                        {category.categoryName}
+                      </span>
+                    </Card.Title>
+                    <Card.Subtitle className="by-type-count">
+                      {category.categoryQuantity}
+                    </Card.Subtitle>
+                  </Card.ImgOverlay>
                 </Card>
-
-
               </SwiperSlide>
             ))}
           </Swiper>
-
-
         </Container>
       </div>
     </>

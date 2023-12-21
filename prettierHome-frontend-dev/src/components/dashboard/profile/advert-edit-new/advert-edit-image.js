@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { uploadImage } from "../../../../api/image-service";
 import * as Yup from "yup";

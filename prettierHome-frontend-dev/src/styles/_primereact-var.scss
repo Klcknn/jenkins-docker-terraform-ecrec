@@ -59,3 +59,18 @@
 
 }
 
+.p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider{
+  background: v.$color-success-dark;
+}
+
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
+  background: v.$color-success-dark;
+}
+
+.check-switch {
+  text-align: center;
+
+  .custom-switch {
+    font-size: 30px;
+  }
+}
