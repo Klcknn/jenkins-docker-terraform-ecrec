@@ -1,37 +1,36 @@
-
 spring:
   datasource:
-    url: jdbc:mysql://your-rds-endpoint:your-rds-port/your-database-name
-    username: your-username
-    password: your-password
+    url: jdbc:mysql://database-1.ciedjrms6nte.us-east-1.rds.amazonaws.com:5432/webappdb
+    #url: jdbc:mysql://your-rds-endpoint:your-rds-port/your-database-name
+    username: knnklc
+    #username: your-username
+    password: knnklc76
+    #password: your-password
     driver-class-name: com.mysql.cj.jdbc.Driver
-
 
 server:
   port: 8080
   error:
-    #    include-stacktrace: never
+    #include-stacktrace: never
     include-binding-errors: always
     include-message: always
 
-spring:
-  servlet:
-    multipart:
-      max-file-size: 3MB
-      max-request-size: 30MB
-  web:
-    locale: auto
-  messages:
-    basename: messages
-    encoding: UTF-8
-    cache-duration: -1
-    fallback-to-system-locale: true
-  profiles:
-    include:
-      - security
-      - data
-      - mail
-
+servlet:
+  multipart:
+    max-file-size: 3MB
+    max-request-size: 30MB
+web:
+  locale: auto
+messages:
+  basename: messages
+  encoding: UTF-8
+  cache-duration: -1
+  fallback-to-system-locale: true
+profiles:
+  include:
+    - security
+    - data
+    - mail
 
 #ExportFilePath
 export:
