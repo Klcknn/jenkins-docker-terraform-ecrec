@@ -142,15 +142,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.11.1</version> <!-- Use the latest version -->
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<release>17</release> <!-- Set the desired Java version -->
 				</configuration>
-            </plugin> -->
+            </plugin>
 		</plugins>
 	</build>
 
