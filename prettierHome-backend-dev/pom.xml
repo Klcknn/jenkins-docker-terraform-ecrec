@@ -158,9 +158,25 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version> <!-- Update to a version that supports Java 17 -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+      			</executions>
 				<configuration>
-					<source>17</source>
-					<target>17</target>
+					<toolchains>
+						<toolchain>
+							<type>jdk</type>
+							<provides>
+							<version>17</version>
+							</provides>
+							<configuration>
+								<jdkHome>/usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java</jdkHome>
+							</configuration>
+						</toolchain>
+					</toolchains>
 				</configuration>
 			</plugin>
 		</plugins>
