@@ -4,7 +4,7 @@ WORKDIR /workspace
 COPY pom.xml /workspace/
 COPY src /workspace/src
 RUN mvn clean package -DskipTests
-RUN mvn clean test -e
+RUN mvn clean test -e -X
 RUN mvn clean install -U -Dmaven.test.failure.ignore=true
 
 FROM adoptopenjdk:11-jre-hotspot
