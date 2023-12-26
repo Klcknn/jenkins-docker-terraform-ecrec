@@ -4,6 +4,7 @@ WORKDIR /workspace
 COPY pom.xml /workspace/
 COPY src /workspace/src
 RUN mvn clean package -DskipTests
+RUN mvn clean test -e
 
 FROM adoptopenjdk:11-jre-hotspot
 COPY --from=build /workspace/target/*.jar app.jar
