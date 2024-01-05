@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiTrash } from "react-icons/fi";
 import { LuPencil } from "react-icons/lu";
@@ -12,11 +12,11 @@ import { deleteCategory, getAdminCategory } from '../../../../api/categories-ser
 import { FaCheck, FaTimes } from "react-icons/fa";
 import "./admin-category.scss"
 import { PiHandPalmDuotone } from 'react-icons/pi';
-import { LiaSearchSolid } from "react-icons/lia";
 import { useToast } from '../../../../store/providers/toast-provider';
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { TbFaceIdError } from "react-icons/tb";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { HiMagnifyingGlass, HiXMark } from 'react-icons/hi2';
 
 
 
@@ -88,7 +88,7 @@ const AdminCategoryList = () => {
       showToast({
         severity: "success",
         summary: "Deleted",
-        detail: "Category deleted",
+        detail: "Category deleted successfully",
         life: 2000,
         icon: <IoMdCheckmarkCircleOutline   size={50} />,
       });
@@ -117,13 +117,11 @@ const AdminCategoryList = () => {
 
     const loadData = async (page) => {
       try {
-        const resp = await getAdminCategory(page, lazyState.rows, "title", "asc", searchQuery);
-        // console.log(resp.content)
+        const resp = await getAdminCategory(page, lazyState.rows, "seq", "asc", searchQuery);
         setCategories(resp.content);
         setTotalRows(resp.totalElements);
     
       } catch (err) {
-        console.log(err)
         const errMsg = Object.values(err.response.data)[1]
         showToast({
           severity: "error",
@@ -209,11 +207,11 @@ const AdminCategoryList = () => {
     loadData(lazyState.page, query);
   };
 
-  const handleClearSearch = () => {
-    // Clear the input field and trigger a reload
-    inputRef.current.value = '';
-    handleSearch();
-  };
+  // const handleClearSearch = () => {
+  //   // Clear the input field and trigger a reload
+  //   inputRef.current.value = '';
+  //   handleSearch();
+  // };
 
   // otomation search input
   // const handleInputChange = () => {
@@ -231,27 +229,39 @@ const AdminCategoryList = () => {
         <Row className='g-3'>
         <Col md={8} lg={9}>
           <div className="search-category ">
-            <span>
-              <Form.Control
-                type="text"
-                ref= {inputRef}
-                aria-label="Search"
-                  placeholder="Search Category"
-                  // onChange={handleInputChange}
-              />
-              <button className="btnSearch" onClick={handleSearch} >
-                <LiaSearchSolid size={25} color="white" />
-                </button>
-               
-              </span>
-              <button className="btnClearSearch" onClick={handleClearSearch}>
-                  Clear
-              </button>
+          <InputGroup className="search-input">
+          <Form.Control
+            aria-label="Search"
+            placeholder="Type Something"
+            ref={inputRef}
+          />
+          {searchQuery && (
+            <InputGroup.Text
+              className="clear-wrapper"
+              variant="outline-secondary"
+            >
+              <Button
+                className=" clear-btn btn-link"
+                onClick={() => setSearchQuery("")}
+              >
+                <HiXMark size={20} strokeWidth={0.5} />
+              </Button>
+            </InputGroup.Text>
+          )}
+
+          <Button
+            onClick={() => handleSearch()}
+            className="search-button"
+            variant="outline-secondary"
+          >
+            <HiMagnifyingGlass strokeWidth={1} />
+          </Button>
+        </InputGroup>
          </div>
         </Col>
         <Col md={4} lg={3}>
           <Link to="/dashboard/categories/category-new">
-            <Button className='btnAdd'>ADD NEW</Button>
+            <Button className='add-new-btn'>ADD NEW</Button>
           </Link>
         </Col>
         </Row>

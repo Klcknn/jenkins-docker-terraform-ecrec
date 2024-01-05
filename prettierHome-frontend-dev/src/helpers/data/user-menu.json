@@ -13,6 +13,7 @@
   ],
   "manager": [
     { "title": "Dashboard", "link": "/dashboard", "icon": "RiDashboardLine" },
+    { "title": "Adverts", "link": "/dashboard/adverts", "icon": "RiHome3Line" },
     { "title": "Categories", "link": "/dashboard/categories", "icon": "RiListSettingsLine" },
     { "title": "Advert Types", "link": "/dashboard/advert-types", "icon": "RiAdvertisementLine" },
     { "title": "Users", "link": "/dashboard/users", "icon": "RiUserLine" },

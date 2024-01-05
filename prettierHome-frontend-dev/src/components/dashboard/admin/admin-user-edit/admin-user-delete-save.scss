@@ -1,11 +1,11 @@
 @use "../../../../styles/variables" as v;
 
 .admin-user-edit-container{
-  width: 100%;
+  width: 89% !important;
     
    
     .admin-user-edit-form{
-   margin-left:45px;
+      margin-right: 35px !important;
         .admin-user-edit-input-group-first-row{
             position: relative;
             width: 560px !important; 
@@ -65,11 +65,12 @@
 .admin-user-button-row{
     display: flex;
     justify-content: end;
-    margin-right: 95px;
+    gap:5px;
+    margin-right:4px; ;
+   
     .admin-user-button-delete{
         width: 150px;
         border-radius: 7px;
-        margin-right: 5px;
         background-color: v.$color9;
         border: 0;
     }.admin-user-button-save{

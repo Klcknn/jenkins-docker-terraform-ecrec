@@ -1,33 +1,34 @@
 import React from "react";
-import { Card, CardBody, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Map from "./map";
 import ContactForm from "./contact-form";
-import ContactInfo from "./contact-info";
-import "./contact.scss";
 import Spacer from "../common/spacer";
-import Address from "./address";
+import Offices from "./offices";
+import "./contact.scss";
 
 const Contact = () => {
   return (
-    <div className="contact">
-      <Map />
-      <Spacer />
-      <ContactInfo />
-
-      <Container>
-        <Card>
-          <CardBody>
-            <Row>
-              <Col>
-                <ContactForm />
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
+    <>
+      <Container className="contact-container">
+        <div className="map-wrapper">
+          <Map />
+        </div>
+        <Row className="">
+          <Col xs={12} md={7} lg={6}>
+            <ContactForm />
+          </Col>
+          <Col xs={12} md={5} lg={6}>
+            <div className="contact-form-text">
+              <h4>We'd Love To Hear From You.</h4>
+              <p >
+                We are here to answer any question you may have. As a partner of corporates, Prettier Homes has more than 1,000 offices of all sizes and all potential of session.</p>
+            </div>
+          </Col>
+        </Row>
+        <Spacer />
       </Container>
-      <Address />
-      <Spacer />
-    </div>
+      <Offices/>
+    </>
   );
 };
 

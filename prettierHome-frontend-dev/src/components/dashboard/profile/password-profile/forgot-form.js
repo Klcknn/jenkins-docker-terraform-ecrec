@@ -1,19 +1,27 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Row, InputGroup} from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  InputGroup,
+} from "react-bootstrap";
 import * as Yup from "yup";
-import { swalAlert } from "../../../../helpers/function/swal";
 import ButtonLoader from "../../../common/button-loader";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isValid, isInValid } from "../../../../helpers/function/forms";
 import { forgotPassword } from "../../../../api/auth-service";
-import "../../../login-reqister/login-form.scss"
-import { MdEmail } from "react-icons/md";
-import { BsFillSendFill } from "react-icons/bs";
-
+import { useToast } from "../../../../store/providers/toast-provider";
+import { SiLetsencrypt } from "react-icons/si";
+import { HiEnvelope } from "react-icons/hi2";
+import { LuMailQuestion } from "react-icons/lu";
+import "../../../login-reqister/auth-form.scss";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const initialValues = {
@@ -21,7 +29,7 @@ const LoginForm = () => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
   });
 
   const onSubmit = async (values) => {
@@ -30,10 +38,13 @@ const LoginForm = () => {
     try {
       await forgotPassword(values);
       navigate("/reset-password");
-    } catch (err) {
-      console.log(err);
-      const errMsg = Object.values(err.response.data)[0];
-      swalAlert(errMsg, "error");
+    } catch (error) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: Object.values(error.response.data)[0],
+        life: 1500,
+      });
     } finally {
       setLoading(false);
     }
@@ -47,47 +58,61 @@ const LoginForm = () => {
 
   return (
     <Container>
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <Card className="login-card border-0">
-            <Card.Body>
+      <div className='auth-form-container'>
+        <Row>
+          <Col xs={12} lg={7} className='auth-form-main'>
+            <div className="form-wrapper">
               <Form
-                className="login-form"
+                className="auth-form"
                 noValidate
                 onSubmit={formik.handleSubmit}
               >
-                 <InputGroup className="mb-4" controlId="email">
-                      <InputGroup.Text id="basic-addon1"><MdEmail className='fs-5'/></InputGroup.Text>
-                      <Form.Control
-                          className="user-input"
-                          type="text"
-                          placeholder="Email"
-
-                          {...formik.getFieldProps("email")}
-                          isInvalid={isInValid(formik, "email")}
-                          isValid={isValid(formik, "email")}                                      
-                      />
-                      <Form.Control.Feedback type="invalid">
-                         {formik.errors.email}
-                      </Form.Control.Feedback>
+                <div className="forgot-password">
+                  <Link className="forget-password-link" to="/reset-password">
+                    Already have code
+                  </Link>
+                </div>
+                <InputGroup className="mb-4">
+                  <InputGroup.Text className={`${isInValid(formik, "email") ? "invalid" : ""}`}>
+                    <HiEnvelope />
+                  </InputGroup.Text>
+                  <Form.Control
+                    className="user-input"
+                    type="text"
+                    placeholder="Email"
+                    {...formik.getFieldProps("email")}
+                    isInvalid={isInValid(formik, "email")}
+                    isValid={isValid(formik, "email")}
+                  />
+                  <Form.Control.Feedback type="invalid" className="form-feedback">
+                    {formik.errors.email}
+                  </Form.Control.Feedback>
                 </InputGroup>
 
-                <div className="login-button">
+                <div className="form-submit-button">
                   <Button
-                    variant="primary"
+                    variant="secondary"
                     type="submit"
-                    className="w-75 fs-5"
+                    className="submit-button"
                     disabled={!formik.isValid || loading}
                   >
-                    {loading ? <ButtonLoader /> : <BsFillSendFill />} SEND RESET
+                    {loading ? <ButtonLoader size={20} /> : <LuMailQuestion size={20} />} SEND RESET
                     CODE
                   </Button>
                 </div>
               </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            </div>
+          </Col>
+          <Col xs={12} lg={5} className='p-0'>
+            <div className='auth-form-side'>
+              <SiLetsencrypt size={100} />
+              <div className='text-center'>
+                <p className='m-0'>If you have forgotten your password, you can request a password reset code to regain access to your account by using the registered email address</p>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
     </Container>
   );
 };

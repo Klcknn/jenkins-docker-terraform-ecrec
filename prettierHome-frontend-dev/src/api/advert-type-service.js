@@ -20,7 +20,7 @@ export const getAdvertTypeById = async (id) => {
   return data;
 };
 export const getAllAdvertType = async () => {
-  const resp = await axios.get(`${baseURL}/advert-types`, {
+  const resp = await axios.get(`${baseURL}/advert-types/all`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;

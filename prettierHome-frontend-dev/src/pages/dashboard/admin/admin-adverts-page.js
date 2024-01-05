@@ -9,7 +9,7 @@ import {
 } from "../../../api/adverts-service";
 import InputText from "../../../components/common/input-text";
 import InputSelect from "../../../components/common/input-select";
-import { TbHomePlus } from "react-icons/tb";
+import { IoSearchOutline } from "react-icons/io5";
 import ButtonComponent from "../../../components/common/button-component";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -21,7 +21,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { GoLocation } from "react-icons/go";
 import { FiTrash } from "react-icons/fi";
 import { LuPencil } from "react-icons/lu";
-import { IoMdCheckmarkCircleOutline  } from "react-icons/io";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { TbFaceIdError } from "react-icons/tb";
 import { Image as FullImage } from "primereact/image";
 
@@ -39,7 +39,7 @@ import Spacer from "../../../components/common/spacer";
 import { useToast } from "../../../store/providers/toast-provider";
 
 const AdminAdvertsPage = () => {
-  const {showToast} = useToast();
+  const { showToast } = useToast();
   const [advertTypes, setAdvertTypes] = useState([]);
   const [adverts, setAdverts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -62,7 +62,6 @@ const AdminAdvertsPage = () => {
   };
   const getOperationButtons = (row) => {
     if (row.builtIn) return null;
-    // console.log(row)
 
     return (
       <div className="operationsButton">
@@ -83,46 +82,38 @@ const AdminAdvertsPage = () => {
       icon: <PiHandPalmDuotone size={50} />,
       acceptButtonType: "danger",
       handleAccept: () => confirmDelete(row.id),
-        handleReject: () => {
-          showToast({
-            severity: "warn",
-            summary: "Canceled",
-            detail: "Tour request not deleted",
-            life: 2000,
-            icon: <IoMdCheckmarkCircleOutline  size={50} />,
-          });
-        },
+      handleReject: () => {
+        showToast({
+          severity: "warn",
+          summary: "Canceled",
+          detail: "Tour request not deleted",
+          life: 2000,
+          icon: <IoMdCheckmarkCircleOutline size={50} />,
+        });
+      },
     });
   };
-  // const reject = () => {
-  //   toast.current.show({
-  //     severity: "warn",
-  //     summary: "Rejected",
-  //     detail: "You have rejected",
-  //     life: 3000,
-  //   });
-  // };
 
   const confirmDelete = async (id) => {
     try {
       await deleteAdvert(id);
       showToast({
-          severity: "success",
-          summary: "Advert deleted",
-          detail: "Advert deleted successfully",
-          life: 2000,
-          icon: <IoMdCheckmarkCircleOutline size={50} />,
-        });
+        severity: "success",
+        summary: "Advert deleted",
+        detail: "Advert deleted successfully",
+        life: 2000,
+        icon: <IoMdCheckmarkCircleOutline size={50} />,
+      });
       dispatch(setListRefreshToken(Math.random()));
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
       showToast({
-          severity: "error",
-          summary: "Error!",
-          detail: errMsg,
-          life: 3000,
-          icon: <TbFaceIdError size={50} />,
-        });
+        severity: "error",
+        summary: "Error!",
+        detail: errMsg,
+        life: 3000,
+        icon: <TbFaceIdError size={50} />,
+      });
     } finally {
       setLoading(false);
     }
@@ -172,17 +163,19 @@ const AdminAdvertsPage = () => {
   const getTourRequestCountForAdvert = async (id) => {
     try {
       const resp = await getTourRequestCount(id);
-       setTourRequestCounts((prevTourRequest) => ({
+      setTourRequestCounts((prevTourRequest) => ({
         ...prevTourRequest,
         [id]: resp,
       }));
-     } catch (err) {
+    } catch (err) {
       console.error("Error getting Tour Request count:", err);
     }
   };
   const loadData = async (page) => {
     try {
-      const resp = await getAdverts(page, lazyState.rows);
+     
+      const resp = await getAdvertsForAdmin(initialValues, page, lazyState.rows);
+      // const resp = await getAdverts(page, lazyState.rows);
       setAdverts(resp.content);
       setTotalRows(resp.totalElements);
 
@@ -195,12 +188,12 @@ const AdminAdvertsPage = () => {
       }
     } catch (err) {
       showToast({
-          severity: "error",
-          summary: "Error!",
-          detail: Object.values(err.response.data)[0],
-          life: 3000,
-          icon: <TbFaceIdError size={50} />,
-        });
+        severity: "error",
+        summary: "Error!",
+        detail: Object.values(err.response.data)[0],
+        life: 3000,
+        icon: <TbFaceIdError size={50} />,
+      });
     } finally {
       setLoading(false);
     }
@@ -315,21 +308,21 @@ const AdminAdvertsPage = () => {
   ];
 
   const initialValues = {
-    query: "",
-    advertTypeId: 0,
-    priceStart: 0.0,
-    priceEnd: 0.0,
-    categoryId: 0,
+    q: "",
+    advert_type_id: 0,
+    price_start: 0,
+    price_end: 0,
+    category_id: 0,
     status: 0,
   };
 
   const validationSchema = Yup.object({
-    priceStart: Yup.number().test(
+    price_start: Yup.number().test(
       "is-non-negative",
       "Price must be 0 or greater",
       (value) => value >= 0
     ),
-    priceEnd: Yup.number().test(
+    price_end: Yup.number().test(
       "is-greater-than-start",
       "Price end must be greater than or equal to Price start",
       function (value) {
@@ -340,10 +333,10 @@ const AdminAdvertsPage = () => {
         );
       }
     ),
-    advertTypeId: Yup.number()
+    advert_type_id: Yup.number()
       .required("Select an advertisement type")
       .notOneOf([0], "Select an advert type"),
-    categoryId: Yup.number()
+      category_id: Yup.number()
       .required("Select a category")
       .notOneOf([0], "Select a category"),
     status: Yup.number().notOneOf([0], "Select a status"),
@@ -428,7 +421,7 @@ const AdminAdvertsPage = () => {
               {advertTypes.length > 0 && (
                 <InputSelect
                   formik={formik}
-                  field={"advertTypeId"}
+                  field={"advert_type_id"}
                   label={"Advert Type"}
                   type={"Advert Type"}
                   options={advertTypes}
@@ -439,7 +432,7 @@ const AdminAdvertsPage = () => {
               {categories.length > 0 && (
                 <InputSelect
                   formik={formik}
-                  field={"categoryId"}
+                  field={"category_id"}
                   label={"Category"}
                   type={"Category"}
                   options={categories}
@@ -460,7 +453,7 @@ const AdminAdvertsPage = () => {
               <InputText
                 formik={formik}
                 label={"Price start"}
-                field={"priceStart"}
+                field={"price_start"}
                 type={"number"}
               />
             </Col>
@@ -468,7 +461,7 @@ const AdminAdvertsPage = () => {
               <InputText
                 formik={formik}
                 label={"Price end"}
-                field={"priceEnd"}
+                field={"price_end"}
                 type={"number"}
               />
             </Col>
@@ -477,9 +470,9 @@ const AdminAdvertsPage = () => {
                 formik={formik}
                 loading={loading}
                 type="submit"
-                text="Search"
+                text="SEARCH"
               >
-                <TbHomePlus />
+                <IoSearchOutline className="fs-5" />
               </ButtonComponent>
             </Col>
           </Row>

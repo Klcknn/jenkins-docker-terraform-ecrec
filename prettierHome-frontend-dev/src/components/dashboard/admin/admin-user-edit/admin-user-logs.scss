@@ -1,9 +1,8 @@
 @use "../../../../styles/variables" as v;
 
-.user-log-container {
+.admin-user-edit-log-container {
   .user-log-datatable-wrapper { 
-    width: 100%;
-   margin-left: 15px;
+    width: 100% !important;
     .user-log-card {
       overflow: hidden;
       
@@ -27,8 +26,10 @@
         
           }
           &:last-child {
-            text-align: end;
-            padding-left:45px;
+            display: flex;
+            justify-content: center;
+            margin-left:10px;
+            
            
           
           }
@@ -39,7 +40,7 @@
           
             .p-column-header-content {
               display: flex;
-              justify-content: center;
+              justify-content: start;
               min-width: 150px;
               
             }
@@ -82,17 +83,15 @@
             border-bottom-left-radius: 15px;
             text-align: start;
             padding-left:65px;
+            min-width: 250px;
            
           }
 
           &:last-child {
             border-top-right-radius: 15px;
             border-bottom-right-radius: 15px;
-            text-align:end;
-            padding-right:76px;
-       
-            
-          
+            text-align:center;
+            min-width: 250px;
           }
 
           &:not(:first-child) {
@@ -178,7 +177,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 767px) {
     .user-datatable-wrapper .p-datatable.user-datatable .p-datatable-thead>tr>th,
     .user-datatable-wrapper .p-datatable.user-datatable .p-datatable-tfoot>tr>td {
       display: none !important;

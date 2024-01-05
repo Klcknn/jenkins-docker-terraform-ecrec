@@ -5,28 +5,26 @@ import { Fieldset } from 'primereact/fieldset';
 import AdminUserAdvertsProperty from '../../../components/dashboard/admin/admin-user-edit/admin-user-adverts-property';
 import AdminUserTourRequestProperty from '../../../components/dashboard/admin/admin-user-edit/admin-user-tour-request-property';
 import AdminUserFavoritesProperty from '../../../components/dashboard/admin/admin-user-edit/admin-user-favorites-property';
-import "../../../components/dashboard/admin/admin-user-edit/field-set.scss"
+import "../admin/field-set.scss"
 import AdminUserLogs from '../../../components/dashboard/admin/admin-user-edit/admin-user-logs';
 const AdminUserEditPage = () => {
   return (
     <>
     <AdminUserDeleteAndSave/>
     <Spacer minHeight={50}/>
-    <Fieldset  legend="Adverts" toggleable>
+    <Fieldset className="admin-user-edit-field-set"  legend="Adverts" toggleable>
     <AdminUserAdvertsProperty/>
 </Fieldset>
 <Spacer minHeight={50}/>
-<Fieldset legend="Tour Request" toggleable>
-    <p className="m-3">
+<Fieldset className="admin-user-edit-field-set" legend="Tour Request" toggleable>
     <AdminUserTourRequestProperty/>
-    </p>
 </Fieldset>
 <Spacer minHeight={50}/>
-<Fieldset legend="Favorites" toggleable>
+<Fieldset className="admin-user-edit-field-set" legend="Favorites" toggleable>
     <AdminUserFavoritesProperty/>
 </Fieldset>
 <Spacer minHeight={50}/>
-<Fieldset legend="Logs" toggleable>
+<Fieldset className="admin-user-edit-field-set" legend="Logs" toggleable>
     <AdminUserLogs/>
 </Fieldset>
 <Spacer minHeight={50}/>

@@ -13,6 +13,7 @@ import ButtonComponent from "../../../components/common/button-component";
 import Spacer from "../../../components/common/spacer";
 import { useSelector } from "react-redux";
 import { useToast } from "../../../store/providers/toast-provider";
+import { MdEditNote } from "react-icons/md";
 
 const AdminAdvertTypeEdit = () => {
   const [flag, setflag] = useState(false);
@@ -112,12 +113,11 @@ const AdminAdvertTypeEdit = () => {
               <div className="advert-types-edit-btn-group">
                 <Button
                   className="delete-btn"
-                  variant="secondary"
                   onClick={() => {
                     deleteType();
                   }}
                 >
-                  Delete
+                  DELETE
                 </Button>
 
                 <ButtonComponent
@@ -125,8 +125,10 @@ const AdminAdvertTypeEdit = () => {
                   formik={formik}
                   loading={loading}
                   type="submit"
-                  text="Save"
-                ></ButtonComponent>
+                  text="UPDATE"
+                >
+                  <MdEditNote className="fs-4" />
+                </ButtonComponent>
               </div>
             </Form>
           </Container>

@@ -6,21 +6,22 @@ import { useFormik } from "formik";
 import ButtonComponent from "../../../common/button-component";
 import { useToast } from "../../../../store/providers/toast-provider";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {  updatePropertyKey } from "../../../../api/property-key-service";
 import PropertyKey from "./property-key-new";
+import { MdEditNote } from "react-icons/md";
+import "./property-key-edit.scss";
 
-const PropertyKeyEditPage = ({ isAddedOrEdited, onStateChange }) => {
+const PropertyKeyEditPage = ({ onStateChange }) => {
 
   const {currentObject } = useSelector(state => state.misc);
   const [loading, setLoading] = useState(false);
   const [flag, setflag] = useState(false);
   const { showToast } = useToast();
-  const navigate = useNavigate();
 
 
   const initialValues = {
-    ...currentObject
+    ...currentObject,
+    keyType: currentObject.keyType === "TEXT" ? "0" : currentObject.keyType === "BOOLEAN" ? "1" : "2"
   };
 
   const validationSchema = Yup.object({
@@ -46,8 +47,7 @@ const PropertyKeyEditPage = ({ isAddedOrEdited, onStateChange }) => {
     };
 
     try {
-      const resp = await updatePropertyKey(currentObject.id, payload);
-      // console.log(resp)
+      await updatePropertyKey(currentObject.id, payload);
       formik.resetForm();
       setflag(false);
       handleParentStateChange() 
@@ -58,7 +58,6 @@ const PropertyKeyEditPage = ({ isAddedOrEdited, onStateChange }) => {
         life: 3000,
       });
     } catch (err) {
-      console.log(err)
       const errMsg = Object.values(err.response.data)[0];
 
       showToast({
@@ -92,7 +91,7 @@ const PropertyKeyEditPage = ({ isAddedOrEdited, onStateChange }) => {
     <>
       {flag && (
         <>
-          <Form noValidate onSubmit={formik.handleSubmit}>
+          <Form noValidate onSubmit={formik.handleSubmit} className="property-key-edit-form">
             <Spacer minHeight={25} />  
             <PropertyKey formik={formik} />
             <Spacer minHeight={25} />
@@ -101,14 +100,13 @@ const PropertyKeyEditPage = ({ isAddedOrEdited, onStateChange }) => {
                 formik={formik}
                 loading={loading}
                 type="submit"
-                text="Update"
+                text="UPDATE"
                 style={{ borderRadius: "10px", padding: "10px 55px" }}
               >
+                <MdEditNote style={{marginTop:"-2px", fontSize:"1.3rem"}} />
               </ButtonComponent>
             </Container>
-            <Spacer />
           </Form>
-          <Spacer />
         </>
       )}
     </>

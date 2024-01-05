@@ -12,10 +12,10 @@ const baseURL = config.api.baseUrl;
  */
 export const getAdvertsBySlug = async (slug) => {
   // Send a GET request to the API endpoint with the provided slug
-  const resp = await axios.get(`${baseURL}/adverts/${slug}`, {
+  const resp = await axios.get(`${baseURL}/adverts/details/${slug}`, {
     headers: getAuthHeader(),
   });
-  
+
   // Extract the data from the response
   const data = resp.data;
 
@@ -40,7 +40,6 @@ export const getAllImagesByAdvertId = async (id) => {
       headers: getAuthHeader(),
     });
     const data = resp.data;
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error in getAllImagesByAdvertId", error);
@@ -56,15 +55,20 @@ export const getAllImagesByAdvertId = async (id) => {
 //   });
 //   const data = await resp.data;
 //   return data;
-//   console.log(data + "serise geldi")
 // };
 
-
-
-export const getAdverts = async (page = 0, size = 20, sort = "category_id", type = "asc") => {
-  const resp = await axios.get(`${baseURL}/adverts/auth?page=${page}&size=${size}&sort=${sort}&type=${type}`, {
-    headers: getAuthHeader(),
-  });
+export const getAdverts = async (
+  page = 0,
+  size = 20,
+  sort = "category_id",
+  type = "asc"
+) => {
+  const resp = await axios.get(
+    `${baseURL}/adverts/auth?page=${page}&size=${size}&sort=${sort}&type=${type}`,
+    {
+      headers: getAuthHeader(),
+    }
+  );
 
   const data = await resp.data;
   return data;
@@ -73,7 +77,7 @@ export const getAdverts = async (page = 0, size = 20, sort = "category_id", type
 // TODO T01 GET ADVERT TYPES
 
 export const getAdvertTypes = async () => {
-  const resp = await axios.get(`${baseURL}/advert-types`, {
+  const resp = await axios.get(`${baseURL}/advert-types/all`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -82,7 +86,7 @@ export const getAdvertTypes = async () => {
 
 // TODO C01 GET CATEGORIES
 export const getCategories = async () => {
-  const resp = await axios.get(`${baseURL}/categories`, {
+  const resp = await axios.get(`${baseURL}/categories/all`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -91,7 +95,7 @@ export const getCategories = async () => {
 
 // TODO  U01 GET ALL COUNTRIES
 export const getAllCountries = async () => {
-  const resp = await axios.get(`${baseURL}/countries`, {
+  const resp = await axios.get(`${baseURL}/countries/all`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -100,7 +104,7 @@ export const getAllCountries = async () => {
 
 // TODO   GET ALL CITIES BY COUNTRY
 export const getAllCityByCountry = async (countryId) => {
-  const resp = await axios.get(`${baseURL}/cities/${countryId}`, {
+  const resp = await axios.get(`${baseURL}/cities/search/${countryId}`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -109,7 +113,7 @@ export const getAllCityByCountry = async (countryId) => {
 
 // TODO   GET ALL DISTRICTS BY CITY
 export const getAllDistrictsByCity = async (cityId) => {
-  const resp = await axios.get(`${baseURL}/districts/${cityId}`, {
+  const resp = await axios.get(`${baseURL}/districts/search/${cityId}`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -174,21 +178,28 @@ export const updateAdvertByCustomer = async (advertId, values) => {
   return data;
 };
 
-
-export const getByAdvertsPage = async (search, page = 0, size = 20, sort = "category.id", type = "asc") => {
+export const getByAdvertsPage = async (
+  search,
+  page = 0,
+  size = 20,
+  sort = "category.id",
+  type = "asc"
+) => {
   const queryString = prepareRequestParams(search);
-  const separator = queryString ? '&' : '';
-  const resp = await axios.get(`${baseURL}/adverts/search?${queryString}${separator}page=${page}&size=${size}&sort=${sort}&type=${type}`, {
-
-    headers: getAuthHeader(),
-  });
+  const separator = queryString ? "&" : "";
+  const resp = await axios.get(
+    `${baseURL}/adverts/search?${queryString}${separator}page=${page}&size=${size}&sort=${sort}&type=${type}`,
+    {
+      headers: getAuthHeader(),
+    }
+  );
   const data = await resp.data;
   return data;
 };
 
 // TODO A02  GET ADVERTS BY CITIES
-export const getAdvertsByCities = async () => {
-  const resp = await axios.get(`${baseURL}/adverts/cities`, {
+export const getAdvertsByCities = async (limit) => {
+  const resp = await axios.get(`${baseURL}/adverts/cities/${limit}`, {
     headers: getAuthHeader(),
   });
   const data = await resp.data;
@@ -204,7 +215,6 @@ export const getAdvertsByCategories = async () => {
   return data;
 };
 
-
 // TODO A04 GET MOST POPULAR ADVERTS
 export const getMostPopularAdverts = async (amount) => {
   const resp = await axios.get(`${baseURL}/adverts/popular/${amount}`, {
@@ -214,7 +224,6 @@ export const getMostPopularAdverts = async (amount) => {
   return data;
 };
 
-
 //TODO getAdvertsForAdminPage
 export const getAdvertsForAdmin = async (
   values,
@@ -223,8 +232,9 @@ export const getAdvertsForAdmin = async (
   sort = "category.id",
   type = "asc"
 ) => {
+  const queryString = prepareRequestParams(values);
   const resp = await axios.get(
-    `${baseURL}/adverts/admin?q=${values?.query}&category.id=${values.categoryId}&advert_type_id=${values.advertTypeId}&price_start=${values.priceStart}&price_end=${values.priceEnd}&status=${values.status}&page=${page}&size=${size}&sort=${sort}&type=${type}`,
+    `${baseURL}/adverts/admin?${queryString}&page=${page}&size=${size}&sort=${sort}&type=${type}`,
     {
       headers: getAuthHeader(),
     }
@@ -232,7 +242,6 @@ export const getAdvertsForAdmin = async (
   const data = await resp.data;
   return data;
 };
-
 
 // TODO A09 GET ADVERT FOR ADMIN
 export const findAdvertForAdmin = async (id) => {
@@ -243,7 +252,6 @@ export const findAdvertForAdmin = async (id) => {
   return data;
 };
 
-
 // TODO A12  UPDATE ADVERT FOR ADMİN
 export const updateAdvertByAdmin = async (advertId, values) => {
   const resp = await axios.put(`${baseURL}/adverts/admin/${advertId}`, values, {
@@ -252,7 +260,13 @@ export const updateAdvertByAdmin = async (advertId, values) => {
   const data = await resp.data;
   return data;
 };
-
-
-
-
+export const getAllAdvertsByUserId = async (id, page = 0, size = 20) => {
+  const resp = await axios.get(
+    `${baseURL}/adverts/getAll/${id}?page=${page}&size=${size}`,
+    {
+      headers: getAuthHeader(),
+    }
+  );
+  const data = await resp.data;
+  return data;
+};

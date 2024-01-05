@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { FaLock } from "react-icons/fa6";
+import { HiLockClosed, HiEye, HiEyeSlash } from "react-icons/hi2";
+import { isInValid, isValid } from "../../helpers/function/forms";
 import "./password-input.scss";
 
 
-const PasswordInput = (props) => {
+const PasswordInput = ({ formik, placeholder, field, children, setFocus }) => {
   const [type, setType] = useState("password");
 
   const handleType = () => {
@@ -13,24 +13,38 @@ const PasswordInput = (props) => {
     setType(newType);
   };
 
+  const handleFocus = () => {
+    if (setFocus) setFocus(true);
+  };
+
+  const handleBlur = () => {
+    if (setFocus) setFocus(false);
+    formik.setFieldTouched(field, true)
+  };
+
   return (
-    <InputGroup className="mb-3">
-       <InputGroup.Text id="basic-addon1" 
-          style={{borderTopLeftRadius:"5px", borderBottomLeftRadius:"5px"}}><FaLock /></InputGroup.Text>
-
-      <Form.Control
-        type={type}
-        placeholder={props.placeholderText || "Enter password"}
-        aria-label="Enter password"
-        aria-describedby="basic-addon1"
-        {...props}
-      />
-      <InputGroup.Text id="basic-addon1" className="password-icon" onClick={handleType}>
-        {type === "password" ? <BsEyeSlashFill/> :  <BsEyeFill /> }
+    <InputGroup className="password-input-group mb-4">
+      <InputGroup.Text className={`password-input-group-text ${isInValid(formik, field) ? "invalid" : ""}`}>
+        {children || <HiLockClosed />}
       </InputGroup.Text>
-
-      <Form.Control.Feedback type="invalid">
-        {props.error}
+      <Form.Control
+        className="user-password-input"
+        type={type}
+        placeholder={placeholder || "Enter password"}
+        {...formik.getFieldProps(field)}
+        name={field}
+        onChange={formik.handleChange}
+        value={formik.values[field]}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        isInvalid={isInValid(formik, field)}
+        isValid={isValid(formik, field)}
+      />
+      <InputGroup.Text className={`password-eye  ${isInValid(formik, field) ? "invalid" : ""}`} onClick={handleType}>
+        {type === "password" ? <HiEye /> : <HiEyeSlash />}
+      </InputGroup.Text>
+      <Form.Control.Feedback type="invalid" className="form-feedback">
+        {formik.errors[field]}
       </Form.Control.Feedback>
     </InputGroup>
   );

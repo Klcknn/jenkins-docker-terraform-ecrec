@@ -1,71 +1,73 @@
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Provider, LikeButton, RateButton, UpdownButton } from "@lyket/react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../../api/favorites-service";
+import { useToast } from "../../store/providers/toast-provider";
+import { showModal, toggleFav } from "../../store/slices/fav-slice";
+import { HiMiniHeart } from "react-icons/hi2";
 import "./properties-card.scss";
 
 const PropertiesCard = ({ ad }) => {
+  const { favorites } = useSelector((state) => state.fav);
+  const { isUserLogin } = useSelector((state) => state.auth);
+
+  const isFaved = favorites.includes(ad.id);
+  const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
+  const dispatch = useDispatch();
+
+  const handleFavorite = async () => {
+    if (isUserLogin) {
+      setLoading(true);
+      try {
+        await toggleFavorite(ad.id);
+        dispatch(toggleFav(ad.id));
+        showToast({
+          severity: "success",
+          summary: "Deleted",
+          detail: "Favorite deleted",
+          // icon: <IoMdCheckmarkCircleOutline size={50} />,
+        });
+      } catch (err) {
+        showToast({
+          severity: "error",
+          summary: "Error",
+          detail: Object.values(err.response.data)[0],
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      dispatch(showModal());
+    }
+  };
+
   return (
-    <Link to={`/${ad.slug}`} className=" text-decoration-none">
-      <Card className="popular-properties-card border-0">
-        <Card.Img
-          className=" equal-img"
-          src={`data:${ad.image.type};base64, ${ad.image.data}`}
-          alt={ad.image.name}
-        />
-        <Card.ImgOverlay className="d-flex justify-content-end align-items-start ">
-          <Provider
-            apiKey="acc0dbccce8e557db5ebbe6d605aaa"
-            theme={{
-              colors: {
-                icon: "black",
-                secondary: "red",
-                background: "white",
-                text: "transparent",
-                primary: "white",
-                highlight: "red",
-              },
-            }}
-          >
-            <div className="properties-card-like-btn">
-              <LikeButton
-                hideCounterIfLessThan={2}
-                namespace="none"
-                id="deneme"
-                className="bg-dark"
-                component={LikeButton.templates.Twitter}
-              />
-            </div>
-          </Provider>
-        </Card.ImgOverlay>
-        <Card.Body className="popular-properties-anchor d-flex justify-content-between align-items-center">
-          <div>
-            <h4 className="card-title">${ad.price}</h4>
-
-            <div>
-              <h6>{ad.title}</h6>
-              <h6>
-                {ad.district.name}, {ad.city.name}
-              </h6>
-            </div>
-
-            {/* <div className="d-flex my-1">
-                        <h6>3 bed</h6>
-
-                        <h6>3 bath</h6>
-                        <h6>250 m2</h6>
-                        <h6>1000 m2 lot</h6>
-                      </div> */}
+    <>
+      <Card className="property-card">
+        <Link to={`/advert/${ad.slug}`} className=" text-decoration-none">
+          <Card.Img
+            variant="top"
+            src={`data:${ad.image.type};base64, ${ad.image.data}`}
+            alt={ad.image.name}
+            className="property-card-img"
+          />
+        </Link>
+        <button className={`fav-button ${isFaved ? "faved" : ""}`} onClick={handleFavorite} disabled={loading}>
+          <HiMiniHeart className="heart-icon" />
+        </button>
+        <div className="property-card-body">
+          <div className="property-card-info">
+            <Card.Title>{ad.title}</Card.Title>
+            <Card.Text>
+              {ad.district.name}, {ad.city.name}
+            </Card.Text>
           </div>
-
-          {/* <div>
-                      <h6>{ad.title}</h6>
-                      <h6>
-                        {ad.district.name}, {ad.city.name}
-                      </h6>
-                    </div> */}
-        </Card.Body>
+          <span className="price">${ad.price}</span>
+        </div>
       </Card>
-    </Link>
+    </>
   );
 };
 

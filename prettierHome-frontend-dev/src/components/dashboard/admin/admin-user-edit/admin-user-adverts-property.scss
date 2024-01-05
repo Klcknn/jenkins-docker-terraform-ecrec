@@ -1,5 +1,5 @@
 @use "../../../../styles/variables" as v;
-.advert-container  {
+.admin-user-edit-advert-container {
   width: 100%!important;
   padding:0;
  
@@ -51,6 +51,9 @@
           background-color: #f3972b;
         }
       }
+    }
+    .tr-datatable-wrapper .tr-datatable .p-datatable-tbody>tr>td .p-column-title {
+      display: none;
     }
 
 
@@ -129,6 +132,16 @@
             }
           }
 
+          .icons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start!important;
+            color: v.$color2;
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
           .operationsButton {
             .btn-link {
               color: white;
@@ -160,7 +173,7 @@
               font-size: 16px;
             }
 
-            // @media screen and (max-width: 992px) {
+            // @media screen and (max-width: 991px) {
             //   flex-flow: wrap;
             // }
           }
@@ -191,7 +204,7 @@
         }
 
         button {
-          margin: 3px;
+          margin: 3px !important;
           background-color: v.$color8;
           border-radius: 80%;
           color: v.$color6;
@@ -222,6 +235,33 @@
     }
   }
 
+  @media screen and (max-width: 767px) {
+    .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-thead>tr>th,
+    .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tfoot>tr>td {
+      display: none !important;
+    }
+
+    .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td {
+      text-align: left;
+      display: block;
+      width: 100%;
+      float: left;
+      clear: left;
+      border: 0 none;
+    }
+
+    .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td .p-column-title {
+      padding: 0.4rem;
+      min-width: 30%;
+      display: inline-block;
+      margin: -0.4em 1em -0.4em -0.4rem;
+      font-weight: bold;
+    }
+
+    .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tbody>tr>td:last-child {
+      border-bottom: 1px solid var(--surface-d);
+    }
+  }
 
 }
 

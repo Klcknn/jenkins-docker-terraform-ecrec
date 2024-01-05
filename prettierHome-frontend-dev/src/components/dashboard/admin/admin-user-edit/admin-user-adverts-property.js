@@ -4,9 +4,9 @@ import {Column} from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Button, Container } from 'react-bootstrap';
 import { Image as FullImage } from 'primereact/image';
-import { deleteAdvert, getAdverts } from '../../../../api/adverts-service';
+import { deleteAdvert,getAllAdvertsByUserId } from '../../../../api/adverts-service';
 import { useDispatch, useSelector } from 'react-redux';
-import "../admin-user-edit/admin-user-adverts-property.scss";
+import "../admin-user-edit/admin-user-adverts-property.scss"
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { GoLocation } from "react-icons/go";
@@ -21,6 +21,7 @@ import { PiHandPalmDuotone } from 'react-icons/pi';
 import { TbFaceIdError } from "react-icons/tb";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { useToast } from '../../../../store/providers/toast-provider';
+import { useLocation } from 'react-router-dom';
 
 
 const AdminUserAdvertsProperty = () => {
@@ -34,9 +35,8 @@ const AdminUserAdvertsProperty = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { currentRecord } = useSelector((state) => state.misc);
-  const id = currentRecord?.id;
-
+  const location = useLocation();
+  const id = location?.state?.id;
 
   const [lazyState, setlazyState] = useState({
     first: 0,
@@ -52,10 +52,9 @@ const AdminUserAdvertsProperty = () => {
 
 
   const getProperty = (adverts) => {
-  
+   
       return (
         <div className="getproperty">
-  
           {
             <div className="image">
             <FullImage
@@ -68,7 +67,7 @@ const AdminUserAdvertsProperty = () => {
               
           }
           <div className='text'>
-            <Link to={`/${adverts.slug}`} >{adverts.title}</Link>
+            <Link to={`/advert/${adverts.slug}`} >{adverts.title}</Link>
             <p>{adverts.country.name + " " + adverts.city.name + " " + adverts.district.name }</p>
             <p>{"$" + adverts.price}</p>
           </div>
@@ -84,10 +83,7 @@ const AdminUserAdvertsProperty = () => {
 
   const getOperationButtons = (row) => {
     if (row.builtIn) return null;
-    // console.log(row)
-
     return (
-
       <div className='operationsButton'>
         <Button className="btn-link" onClick={(e) => handleDelete(e, row)} >
           <FiTrash  />
@@ -109,11 +105,11 @@ const AdminUserAdvertsProperty = () => {
       handleAccept: () => confirmDelete(row.id),
       handleReject: () => {
         showToast({
-          severity: 'warn',
-          summary: 'Canceled',
-          detail: 'Advert not deleted',
+          severity: "warn",
+          summary: "Canceled",
+          detail: "Advert not deleted",
           life: 2000,
-          icon: <IoMdCloseCircleOutline   size={50} />,
+          icon: <IoMdCloseCircleOutline  size={50} />,
         });
       },
     });
@@ -146,10 +142,8 @@ const AdminUserAdvertsProperty = () => {
 
 
   const handleEdit = (row) => {
-    // console.log(row);
     dispatch(setCurrentRecord(row));
     navigate('/ad/edit');
-
   };
 
 
@@ -169,13 +163,9 @@ const getStyle = (status) => {
 
   return statusStyles[status] || null;
 };
-
-
 const getViewLikeTour = (adverts) => {
-
     const favoritesCount = favoritesCounts[adverts.id] ;
     const tourRequestCount = tourRequestCounts[adverts.id];
- 
     return (
       <div className='icons'>
         <div><FaRegEye/>  {adverts.viewCount}</div>
@@ -184,17 +174,13 @@ const getViewLikeTour = (adverts) => {
       </div>
     );
   };
-
-
   const getFavoritesCountForAdvert = async (id) => {
     try {
       const resp = await getFavoritesCount(id);
-      // console.log(resp);
       setFavoritesCounts(prevFavorites => ({
         ...prevFavorites,
         [id]: resp,
       }));
-      // console.log(favoritesCounts);
     } catch (err) {
       console.error("Error getting favorites count:", err);
     } 
@@ -203,29 +189,26 @@ const getViewLikeTour = (adverts) => {
   const getTourRequestCountForAdvert = async (id) => {
     try {
       const resp = await getTourRequestCount(id);
-      // console.log(resp);
       setTourRequestCounts(prevTourRequest => ({
         ...prevTourRequest,
         [id]: resp,
       }));
-      // console.log(tourRequestCounts);
     } catch (err) {
       console.error("Error getting Tour Request count:", err);
     } 
   };
 
-    const loadData = async (page) => {
+    const loadData = async (id,page) => {
       try {
-        const resp = await getAdverts(page, lazyState.rows);
-        const filteredArray=resp.content.filter((advert) => advert.user.id === id);
-        setAdverts(filteredArray);
-        setTotalRows(filteredArray.lenght);
+        const resp = await getAllAdvertsByUserId(id,page, lazyState.rows);
+        setAdverts(resp.content);
+        setTotalRows(resp.totalElements);
         
-        for (const advert of filteredArray) {
+        for (const advert of resp.content) {
           getFavoritesCountForAdvert(advert.id);
         }
        
-        for (const advert of filteredArray) {
+        for (const advert of resp.content) {
           getTourRequestCountForAdvert(advert.id);
         }
     
@@ -250,9 +233,8 @@ const getViewLikeTour = (adverts) => {
     padding: "0 10px",
 };
 
-
-  
   const property = (adverts) => (
+    
     <div  style={{ padding: "0 10px" }} > 
     <div className="p-column-title mb-1" >Property</div>
       <div>{getProperty(adverts)}</div>
@@ -286,16 +268,13 @@ const getViewLikeTour = (adverts) => {
     </div>
   );
 
-
-
   useEffect(() => {
-    loadData(lazyState.page);
+    loadData(id,lazyState.page);
   }, [lazyState, listRefreshToken]);
-
-
+  
   return (
     <>
-      <Container className="advert-container">
+      <Container className="admin-user-edit-advert-container">
         <div className="tr-datatable-wrapper">
           <div className="card" >
             <DataTable   className='tr-datatable'

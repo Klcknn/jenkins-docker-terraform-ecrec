@@ -1,13 +1,10 @@
 package com.ph.controller;
 
 import com.ph.exception.customs.ValuesNotMatchException;
-import com.ph.payload.response.AdvertCategoryResponse;
-import com.ph.payload.response.AdvertCityResponse;
+import com.ph.payload.response.*;
 import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
-import com.ph.payload.response.DetailedAdvertResponse;
-import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.service.AdvertService;
 import com.ph.utils.MessageUtil;
 import com.ph.utils.ValidationUtil;
@@ -43,7 +40,9 @@ public class AdvertController {
             @RequestParam(value = "at", required = false) Long advertTypeId,
             @RequestParam(value = "ps", required = false) Integer priceStart,
             @RequestParam(value = "pe", required = false) Integer priceEnd,
-            @RequestParam(value = "s", required = false) Integer status,
+            @RequestParam(value = "ctry", required = false) Long country,
+            @RequestParam(value = "city", required = false) Long city,
+            @RequestParam(value = "dist", required = false) Long district,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "sort", defaultValue = "category.id") String sort,
@@ -60,15 +59,17 @@ public class AdvertController {
                 advertTypeId,
                 priceStart,
                 priceEnd,
-                status,
+                country,
+                city,
+                district,
                 pageable
         );
     }
 
     // NOT:A02 / getAdvertsByCities() ************************************************************
-    @GetMapping("/cities")
-    public List<AdvertCityResponse> getAdvertsByCities() {
-        return service.getAdvertsByCities();
+    @GetMapping("/cities/{limit}")
+    public List<AdvertCityResponse> getAdvertsByCities(@PathVariable() Integer limit) {
+        return service.getAdvertsByCities(limit);
     }
 
 
@@ -139,7 +140,7 @@ public class AdvertController {
 
 
     // NOT:A07 / getBySlug() ************************************************************
-    @GetMapping("/{slug}")
+    @GetMapping("/details/{slug}")
     public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug) {
         return service.getBySlug(slug);
     }
@@ -210,6 +211,19 @@ public class AdvertController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return service.delete(id, userDetails);
+    }
+    // Not: getAllAdvertsByUserId
+    @GetMapping("/getAll/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<Page<DetailedAdvertResponse>> getAllAdvertsByUserId(@PathVariable Long id,
+                                                     @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                     @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+                                                     @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+                                                     @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+
+    ) {
+
+        return ResponseEntity.ok(service.getAllAdvertsByUserId(id,page,sort,size,type));
     }
 
 

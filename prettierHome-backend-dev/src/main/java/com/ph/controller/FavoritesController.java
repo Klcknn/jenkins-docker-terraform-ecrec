@@ -1,9 +1,11 @@
 package com.ph.controller;
 
 import com.ph.payload.response.AdvertResponseForFavorite;
+import com.ph.payload.response.LogResponse;
 import com.ph.service.FavoritesService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,7 +37,7 @@ public class FavoritesController {
 
     // Not :K03 - FavoriteSave() ***************************************************************************
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1/auth
-    @PostMapping("{id}/auth")
+    @GetMapping("{id}/auth")
     @Transactional
     public ResponseEntity<AdvertResponseForFavorite> addToFavorites(
             @PathVariable(name = "id") Long advertId,
@@ -83,5 +85,18 @@ public class FavoritesController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return favoritesService.deleteFavorite(advertId, userDetails);
+    }
+    // Not: getAllFavoritesByUserId
+    @GetMapping("/getAll/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<Page<AdvertResponseForFavorite>> getAllFavorites(@PathVariable Long id,
+                                                     @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                     @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+                                                     @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+                                                     @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+
+    ) {
+
+        return favoritesService.getAllFavorites(id,page,sort,size,type);
     }
 }

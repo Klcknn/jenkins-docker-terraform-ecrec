@@ -10,10 +10,11 @@ import { BsArrowRight, BsFillPersonFill, BsHeart, BsHouseDoor, BsListCheck } fro
 import { SlLogout } from "react-icons/sl";
 import { prettyDialog } from '../../helpers/function/toast-confirm';
 import { useToast } from '../../store/providers/toast-provider';
+import { resetFavs } from '../../store/slices/fav-slice';
 export const UserProfile = () => {
 
-  const { profileMenu, user } = useSelector(state => state.auth);
-  const navigate = useNavigate();
+  const { profileMenu, user, isUserLogin } = useSelector(state => state.auth);
+
   const dispatch = useDispatch();
   const subMenuRef = useRef();
   const { showToast } = useToast();
@@ -34,12 +35,12 @@ export const UserProfile = () => {
       header: 'Confirmation',
       handleAccept: () => {
         dispatch(logout());
-        removeFromLocalStorage("token");
+        dispatch(resetFavs());
         showToast({
           severity: 'success',
           summary: 'Logout',
           detail: 'You have logged out',
-          icon: <SlLogout size={50}/>,
+          icon: <SlLogout size={50} />,
           life: 1500,
         });
       },
@@ -100,18 +101,26 @@ export const UserProfile = () => {
     }
   };
 
-
   return (
     <>
       {
         <div className='hero'>
           <Nav className='user-logo-nav' ref={subMenuRef}>
-            <img className='user-pic' src="/images/user.jpg" onClick={toggleMenu} />
-
+            {
+              user.profilePhoto ?
+                <img className='user-pic' src={`data:${user?.profilePhoto?.type};base64, ${user?.profilePhoto?.data}`} onClick={toggleMenu} />
+                :
+                <img className='user-pic' src="/images/profile/user.jpg" onClick={toggleMenu} />
+            }
             <div className='sub-menu-wrap' id='subMenu' ref={subMenuRef} >
               <div className="sub-menu">
                 <div className="user-Info">
-                  <img src="/images/user.jpg" alt="user" />
+                {
+              user.profilePhoto ?
+                <img className='user-pic' src={`data:${user?.profilePhoto?.type};base64, ${user?.profilePhoto?.data}`} onClick={toggleMenu} />
+                :
+                <img className='user-pic' src="/images/profile/user.jpg" onClick={toggleMenu} />
+            }
                   <h5> {user.firstName + " " + user.lastName}</h5>
                 </div>
                 <hr />

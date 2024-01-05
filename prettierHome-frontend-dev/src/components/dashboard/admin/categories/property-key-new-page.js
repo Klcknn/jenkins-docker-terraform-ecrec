@@ -12,11 +12,12 @@ import { savePropertyKey } from "../../../../api/property-key-service";
 import { useDispatch, useSelector } from "react-redux";
 import PropertyKey from "./property-key-new";
 import { setListRefreshToken } from "../../../../store/slices/misc-slice";
+import { MdSaveAlt } from "react-icons/md";
+import './property-key-new.scss';
 
-const PropertyKeyNewPage = ({ isAddedOrEdited, onStateChange }) => {
+const PropertyKeyNewPage = ({ onStateChange }) => {
 
   const {currentRecord } = useSelector(state => state.misc);
-  const { listRefreshToken } = useSelector(state => state.misc);
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ const PropertyKeyNewPage = ({ isAddedOrEdited, onStateChange }) => {
       .required("Enter a name")
       .min(2, "Name must be at least 2 characters")
       .max(80, "Name can be at most 80 characters"),
-      keyType: Yup.number()
-        .required("Enter a property Key"),
+    keyType: Yup.number()
+        .required("Select a property Key type"),
     prefix: Yup.string(),
     suffix: Yup.string()
   });
@@ -59,7 +60,7 @@ const PropertyKeyNewPage = ({ isAddedOrEdited, onStateChange }) => {
         ...rest
       };
 
-      const resp = await savePropertyKey(currentRecord.id, propertyKey);
+      await savePropertyKey(currentRecord.id, propertyKey);
       dispatch(setListRefreshToken(Math.random()))
       resetForm();
       handleParentStateChange()
@@ -90,13 +91,9 @@ const PropertyKeyNewPage = ({ isAddedOrEdited, onStateChange }) => {
     onSubmit,
   });
 
-
-  
-
-
   return (
     <>
-      <Form noValidate onSubmit={formik.handleSubmit}>
+      <Form noValidate onSubmit={formik.handleSubmit} className="property-key-new-form">
         <Spacer minHeight={25} />
         <PropertyKey formik={formik} />
         <Spacer minHeight={25} />
@@ -105,9 +102,10 @@ const PropertyKeyNewPage = ({ isAddedOrEdited, onStateChange }) => {
             formik={formik}
             loading={loading}
             type="submit"
-            text="Add Property"
+            text="CREATE"
             style={{borderRadius:"10px", padding:"10px 55px"}}
           >
+            <MdSaveAlt style={{marginTop:"-3px", fontSize:"1.1rem"}} />
           </ButtonComponent>
           <Button style={{borderRadius:"10px", padding:"10px 30px", marginLeft:"10px"}} onClick={()=>isDoneControl()}>DONE</Button>
           {isDone && navigate("/dashboard/categories")}

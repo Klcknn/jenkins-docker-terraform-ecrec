@@ -4,12 +4,9 @@ import "./advert-detail.scss";
 import { useSelector } from "react-redux";
 
 const AdvertDetails = () => {
-  const { currentRecord } = useSelector((state) => state.misc);
-  const keysResponse = currentRecord?.category?.categoryPropertyKeysResponse || [];
-  const propertyValues = currentRecord?.categoryPropertyValue || [];
-  console.log(keysResponse)
-  console.log(propertyValues)
-  console.log(currentRecord)
+  const { advertsCurrentRecord } = useSelector((state) => state.misc);
+  const keysResponse = advertsCurrentRecord?.category?.categoryPropertyKeysResponse || [];
+  const propertyValues = advertsCurrentRecord?.categoryPropertyValue || [];
 
   
   return (

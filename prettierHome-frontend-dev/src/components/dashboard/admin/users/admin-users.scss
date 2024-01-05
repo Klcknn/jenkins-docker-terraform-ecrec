@@ -1,23 +1,89 @@
 @use "../../../../styles/variables" as v;
 
 .user-container {
-  .search-div {
-    background-color: v.$color6;
-    width: 86%;
-    margin-left: 50px;
-    .form-control {
-      background-color: v.$color6;
+  width: 80% !important;
+  .advert-types-page-search-div {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    @media screen and (max-width: 500px) {
+      display: block;
+      .search-input {
+        margin-bottom: 10px;
+        width: 100% !important;
+      }
+      .add-new-btn {
+        width: 100%;
+        font-size: 15px;
+        padding: 10px 15px;
+      }
+      .search-icon {
+        right: 0 !important;
+      }
+      .add-new-btn {
+        margin-left: 0 !important;
+      }
+    }
+
+    .search-input {
+      input {
+        border-radius: 10px;
+        padding: 12px;
+        border-right: 0;
+        border-color: gray;
+        &:focus {
+          box-shadow: none;
+          outline: none;
+        }
+      }
+      .clear-wrapper {
+        background: none;
+        border: 1px solid gray;
+        border-left: 0;
+        .clear-btn {
+          border: none;
+          border-radius: 50%;
+          padding: 6px 8px;
+          color: black;
+          &:hover {
+            background: none;
+            color: v.$color-error-light;
+            transform: scale(1.2);
+          }
+        }
+      }
+      .search-button {
+        border-radius: 10px;
+        background-color: v.$color8;
+        color: white;
+        &:hover {
+          background-color: v.$color7;
+          color: white;
+        }
+      }
+      button {
+        border: 1px solid gray;
+        padding: 10px 15px;
+      }
+     
+    }
+    .add-new-btn {
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-left: 5px;
+      @media screen and (max-width: 856px) {
+        padding: 15px;
+      }
     }
   }
 
   .user-datatable-wrapper {
-    width: 90%;
+    width: 100%;
     .user-card {
       border: none;
       overflow: hidden;
-      .user-datatable {
-        margin-left: 50px;
-      }
+      
 
       thead tr {
         font-size: 18px;
@@ -92,24 +158,38 @@
 
           .operationsButton {
             .btn-link {
-              color: v.$color1;
+              color: white;
               margin-left: 5px;
-              border: 1px solid v.$color1;
-              border-radius: 50px;
+              background-color: v.$color8;
+              border: 1px solid v.$color8;
+              line-height: 1.7rem;
+              
+              
 
-              &:hover {
-                background-color: v.$color2;
-                border: 1px solid v.$color2;
+              &:first-child {
+                border-radius: 50%;
+                &:hover {
+                  border-color: v.$color-error-dark;
+                  background-color: v.$color-error-light;
+                }
+              }
+
+              &:last-child {
+                border-radius: 50%;
+                &:hover {
+                  border-color: v.$color-success-dark;
+                  background-color: v.$color-success-light;
+                }
               }
             }
 
             svg {
-              font-size: 20px;
+              font-size: 16px;
             }
 
-            @media screen and (max-width: 992px) {
-              flex-flow: wrap;
-            }
+            // @media screen and (max-width: 991px) {
+            //   flex-flow: wrap;
+            // }
           }
         }
       }
@@ -187,7 +267,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 767px) {
     .user-datatable-wrapper
       .p-datatable.user-datatable
       .p-datatable-thead

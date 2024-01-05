@@ -1,71 +1,100 @@
 @use "../../../../styles/variables" as v;
 
 .admin-category-container {
-  width: 90% !important;
+  width: 80% !important;
 
   .row{
 
-      margin-bottom: 50px;
-      margin-left: 10px;
-      margin-right: 10px;
+      padding: 0;
+      margin: 0 0 50px 0;
 
       .search-category {
 
-        //background-color: brown !important;
-
-        display: flex;
-        
-        span{
-
-          display: flex !important;
-          width: 100% !important;
-          position: relative !important;
-          justify-content: flex-end !important;
-
-          input{
-            border-radius: 8px;
-            background-color: v.$color5-light;
-            padding: 0.6rem;
+          gap: 10px;
+          display: flex;
+          align-items: center;
+          position: relative;
+          @media screen and (max-width: 500px) {
+            display: block;
+            .search-input {
+              margin-bottom: 10px;
+              width: 100% !important;
+            }
+            // .add-new-btn {
+            //   width: 100%;
+            //   font-size: 15px;
+            //   padding: 10px 15px;
+            // }
+            // .search-icon {
+            //   right: 0 !important;
+            // }
+            // .add-new-btn {
+            //   margin-left: 0 !important;
+            // }
           }
+      
+          .search-input {
+            input {
+              border-radius: 10px;
+              padding: 12px;
+              border-right: 0;
+              border-color: gray;
+              &:focus {
+                box-shadow: none;
+                outline: none;
+              }
+            }
+            .clear-wrapper {
+              background: none;
+              border: 1px solid gray;
+              border-left: 0;
+           
+              .clear-btn {
+                border: none;
+                border-radius: 50%;
+                padding: 6px 8px;
+                color: black;
 
-          .btnSearch{
-            background-color: v.$color1;
-            border: none !important;
-            width: 50px !important;
-            position: absolute !important;
-            right: 0 !important;
-            top: 0 !important;
-            bottom: 0 !important;
-            border-radius: 10px;
-
-            &:hover{
-              background-color: #f3972b;
+                &:hover {
+                  background: none;
+                  color: v.$color-error-light;
+                  transform: scale(1.2);
+                }
+              }
+            }
+            .search-button {
+              border-radius: 10px;
+              background-color: v.$color8;
+              color: white;
+              &:hover {
+                background-color: v.$color7;
+                color: white;
+              }
+            }
+            button {
+              border: 1px solid gray;
+              padding: 10px 15px;
             }
           }
+          // .add-new-btn {
+          //   padding: 12px 15px;
+          //   border-radius: 10px;
+          //   margin-left: 5px;
+          //   @media screen and (max-width: 856px) {
+          //     padding: 15px;
+          //   }
+          // }
+                  
+      }       
 
-
-        }
-
-        .btnClearSearch{
-          background-color: v.$color1;
-          border: none !important;
-          border-radius: 10px;
-          color: v.$color6;
-          margin: 0 5px;
-          padding: 6px 12px;
-          &:hover{
-            background-color: #f3972b;
-          }
-        }
-
-       
-      }
-
-      .btnAdd{
+      .add-new-btn{
         width: 100%;
-        border-radius: 8px;
-        color: white;
-        padding: 0.6rem;
+        padding: 12px 15px;
+        border-radius: 10px;
+        // margin-left: 5px;
+        @media screen and (max-width: 856px) {
+          padding: 15px;
+        }
       }
             
   }
@@ -144,26 +173,6 @@
             }
           }
 
-/*
-          .icons {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: start!important;
-            color: v.$color2;
-            font-size: 1.1rem;
-            font-weight: 500;
-
-            div {
-              margin-left: 40%;
-
-              @media screen and (max-width: 768px) {
-                margin-left: 15px;
-              }
-            }
-
-          }
-*/
           .operationsButton {
             .btn-link {
               color: white;
@@ -194,7 +203,7 @@
               font-size: 16px;
             }
 
-            @media screen and (max-width: 992px) {
+            @media screen and (max-width: 991px) {
               flex-flow: wrap;
             }
           }
@@ -270,7 +279,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 767px) {
     .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-thead>tr>th,
     .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tfoot>tr>td {
       display: none !important;
@@ -298,4 +307,3 @@
     }
   }
 }
-

@@ -2,9 +2,9 @@ import React from "react";
 import NeedHelp from "../components/common/needhelp";
 import Spacer from "../components/common/spacer";
 import Banner from "../components/home-page/banner";
-import ExplorePropertiesByType from "../components/home-page/properties/by-types";
-import ExplorePropertiesByCities from "../components/home-page/properties/by-cities";
-import RegisterAdvert from "../components/home-page/register-advert";
+import ExploreByCategories from "../components/home-page/properties/by-categories";
+import ExploreByCities from "../components/home-page/properties/by-cities";
+import RegisterNow from "../components/home-page/register-now";
 import SellingAdvert from "../components/common/selling-advert";
 import PopularProperties from "../components/home-page/popular-properties";
 
@@ -13,11 +13,11 @@ const HomePage = () => {
     <>
       <Banner />
       <Spacer />
-      <ExplorePropertiesByType />
+      <ExploreByCategories />
       <Spacer />
-      <ExplorePropertiesByCities />
+      <ExploreByCities />
       <Spacer />
-      <RegisterAdvert />
+      <RegisterNow />
       <Spacer />
       <PopularProperties />
       <Spacer height={150} />

@@ -6,7 +6,7 @@ const baseURL = config.api.baseUrl;
 
 // G01 -- admin manager
 export const resetDatabase = async () => {
-    const resp = await axios.get(`${baseURL}/settings/db-reset`, {
+    const resp = await axios.delete(`${baseURL}/settings/db-reset`, {
         headers:  getAuthHeader()
         
     });

@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { Row, Col, Container, Form, FloatingLabel} from "react-bootstrap";
+import React from "react";
+import { Row, Col, Container, Form} from "react-bootstrap";
 import InputText from "../../../common/input-text";
-import '../../profile/advert-edit-new/advert-common.scss';
+import './category-new.scss';
 import FaPicker from "./faPicker";
-
-
-        
 
 const AdminCategoryNewCommon = ({ formik }) => {
 
-
   return (
-    <Container className="advert-common">
+    <Container className="category-new">
       <Row>
         <InputText
           formik={formik}
@@ -35,7 +31,7 @@ const AdminCategoryNewCommon = ({ formik }) => {
 
           <label className="form-label mb-3">Select icon</label>
           <FaPicker
-            formik={formik}
+          formik={formik}
           />
 
         </Col>

@@ -43,7 +43,7 @@ export const prettyDialog = ({ message, header, icon, handleAccept, handleReject
 };
 
 // export const accept = (toastRef, options = {}) => {
-//   console.log('handleAccept called'); 
+//
 //   const {
 //     severity = 'info',
 //     summary = 'Confirmed',
@@ -55,7 +55,7 @@ export const prettyDialog = ({ message, header, icon, handleAccept, handleReject
 // };
 
 // export const reject = (toastRef, options = {}) => {
-//   console.log('handleReject called'); 
+//
 //   const {
 //     severity = 'warn',
 //     summary = 'Rejected',

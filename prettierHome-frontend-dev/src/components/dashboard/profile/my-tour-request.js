@@ -106,7 +106,6 @@ const MyTourRequest = () => {
         });
       dispatch(setListRefreshToken(Math.random()))
     } catch (error) {
-      console.log(error); 
       showToast({
         severity: "error",
         summary: "Error",
@@ -125,7 +124,7 @@ const MyTourRequest = () => {
   const handleEdit = (row) => {
 
     dispatch(setCurrentRecord(row));
-    navigate('/tour-request-details');
+    navigate('/tour-request-details',{ state: { ...row} });
   };
 
   
@@ -173,7 +172,7 @@ const getProperty = (tourRequest) => {
           </div>
         }
         <div className='text'>
-        <Link to={`/${tourRequest.advert.slug}`} >{tourRequest.advert.title}</Link>
+        <Link to={`/advert/${tourRequest.advert.slug}`} >{tourRequest.advert.title}</Link>
           <p>{tourRequest.advert.country.name + " " + tourRequest.advert.city.name + " " + tourRequest.advert.district.name }</p>
           <p>{"$" + tourRequest.advert.price}</p>
         </div>
@@ -200,15 +199,18 @@ const getProperty = (tourRequest) => {
     const loadData = async (page) => {
       try {
         const resp = await getTourRequest(page, lazyState.rows);
-        // console.log(resp);
         setTourRequest(resp.content);
-        // console.log(tourRequest)
         setTotalRows(resp.totalElements);
        
       } catch (err) {
         const errMsg = Object.values(err.response.data)[1]
-        // console.log(errMsg);
-        showError(errMsg);
+
+        showToast({
+          severity: "error",
+          summary: "Error!",
+          detail: errMsg,
+          life: 3000,
+        });
       } finally {
         setLoading(false);
       }

@@ -1,26 +1,32 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import "./needhelp.scss";
-import { HiArrowUpRight } from "react-icons/hi2";
+import { RiMailSendLine } from "react-icons/ri";
 import { HiOutlinePhone } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const NeedHelp = () => {
+  const navigate = useNavigate();
+
   return (
-    <Container className="mt-5 d-lg-flex justify-content-between align-items-center needhelp">
-      <div className="ms-lg-4 mb-4 mb-lg-0">
-        <h1>Need help? Talk to our expert.</h1>
-        <h5>Talk to our experts or Browse through more properties.</h5>
-      </div>
-      <div className="d-flex flex-column flex-lg-row gap-4">
-        <button className="border border-success bg-white rounded-5 text-center">
-          Contact Us
-          <HiArrowUpRight />
-        </button>
-        <button className="border-0 rounded-5 bg-success text-center">
-          <HiOutlinePhone />
-          Contact Us
-        </button>
-      </div>
+    <Container className="need-help">
+      <Row>
+        <Col xs={12} md={7} lg={8} className="need-help-text">
+          <h2>Need help? Talk to our expert.</h2>
+          <h6>Talk to our experts or Browse through more properties.</h6>
+        </Col>
+        <Col xs={12} md={5} lg={4} className="need-help-buttons">
+          <button className="mail-button" onClick={() => navigate("/contact")}>
+            <RiMailSendLine />
+            Mail Us
+          </button>
+          {/* bu kısımda navigate contact sayfasındaki offices idli dive gitmeli */}
+          <button className="phone-button" onClick={() => navigate("/contact")}>
+            <HiOutlinePhone />
+            Contact Us
+          </button>
+        </Col>
+      </Row>
     </Container>
   );
 };

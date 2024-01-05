@@ -3,10 +3,9 @@ import Spacer from "../../../components/common/spacer";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-
 import ButtonComponent from "../../../components/common/button-component";
 import { useToast } from "../../../store/providers/toast-provider";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AdminCategoryEditCommon from "../../../components/dashboard/admin/categories/admin-category-edit";
 import { deleteCategory, updateCategory } from "../../../api/categories-service";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,7 @@ import PropertyKeyNewPage from "../../../components/dashboard/admin/categories/p
 import { Fieldset } from "primereact/fieldset";
 import PropertyKeyEditPage from "../../../components/dashboard/admin/categories/property-key-edit-page";
 import "./admin-category-edit-page.scss"
-import { setCurrentRecord } from "../../../store/slices/misc-slice";
+import { MdEditNote } from "react-icons/md";
 
 const AdminCategoryEditPage = () => {
   // State
@@ -25,13 +24,11 @@ const AdminCategoryEditPage = () => {
   const [flag, setFlag] = useState(false);
   const { showToast } = useToast();
   const [isAddedOrEdited, setIsAddedOrEdited] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
 
-  const handleParentStateChange = (newState) => {
+  const handleParentStateChange = () => {
     setIsAddedOrEdited(!isAddedOrEdited);
-   // console.log("0",newState)
   };
 
   // Formik
@@ -60,16 +57,15 @@ const AdminCategoryEditPage = () => {
     };
 
     try {
-      const resp = await updateCategory(currentRecord.id, payload);
+      await updateCategory(currentRecord.id, payload);
       showToast({
         severity: "success",
         summary: "Success!",
-        detail: "Advert updated successfully",
+        detail: "Category updated successfully",
         life: 3000,
       });
       navigate("/dashboard/categories");
     } catch (err) {
-      console.log(err);
       const errMsg = Object.values(err.response.data)[0];
 
       showToast({
@@ -97,7 +93,7 @@ const AdminCategoryEditPage = () => {
       showToast({
         severity: "error",
         summary: "Error!",
-        detail: Object.values(err.response.data)[0],
+        detail: Object.values(err.response.data),
         life: 3000,
       });
     }
@@ -121,7 +117,7 @@ const AdminCategoryEditPage = () => {
   return (
     <>
       {flag && (
-        <>
+        <Container className="category-edit-page-container">
           <Row className="g-3 category-edit-page-row1 m-0">
             <Col xl={7} className="col-bir">
               <Form noValidate onSubmit={formik.handleSubmit} className="col-bir-form">
@@ -133,14 +129,16 @@ const AdminCategoryEditPage = () => {
                     formik={formik}
                     loading={loading}
                     type="submit"
-                    text="Update"
-                    style={{ borderRadius: "10px", padding: "10px 55px" }}
-                  />
+                    text="UPDATE"
+                    style={{ borderRadius: "10px", padding: "5px 45px" }}
+                  >
+                  <MdEditNote style={{marginTop:"-2px", fontSize:"1.3rem"}} />
+                  </ButtonComponent>
                   <Button
                     onClick={handleDelete}
-                    style={{ borderRadius: "10px", padding: "10px 55px", marginLeft: "10px" }}
+                    style={{ borderRadius: "10px", padding: "10px 55px", marginLeft: "10px", backgroundColor:"#8cb1c8", border:"none" }}
                   >
-                    Delete
+                    DELETE
                   </Button>
                 </Container>
               </Form>
@@ -153,25 +151,25 @@ const AdminCategoryEditPage = () => {
             
             </Col>
           </Row>
-          <Spacer minHeight={50} />
+          <Spacer minHeight={25} />
           <Row className="category-edit-page-row2 m-0">
             <Container className="new-edit-fielset">
               {componentMode === "new" &&
-                (<Fieldset legend="Property Key" toggleable collapsed={false}>
+                (<Fieldset legend="Property Key Add" toggleable collapsed={false}>
                     <PropertyKeyNewPage isAddedOrEdited={isAddedOrEdited} onStateChange={handleParentStateChange}/>
                 </Fieldset>)
               }
             </Container>
-            <Container>
+            <Container className="new-edit-fielset">
               {componentMode === "edit" &&
-                (<Fieldset legend="Property Key" toggleable collapsed={false}>
+                (<Fieldset legend="Property Key Edit" toggleable collapsed={false}>
                     <PropertyKeyEditPage  isAddedOrEdited={isAddedOrEdited} onStateChange={handleParentStateChange}/>
                 </Fieldset>)
               }
             </Container>
           </Row>
           <Spacer minHeight={50} />
-        </>
+        </Container>
       )}
     </>
   );

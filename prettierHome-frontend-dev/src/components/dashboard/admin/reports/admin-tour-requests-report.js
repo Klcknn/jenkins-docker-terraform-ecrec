@@ -9,11 +9,14 @@ import { config } from "../../../../helpers/config";
 import "../reports/admin-adverts-report.scss";
 import { TfiPrinter } from "react-icons/tfi";
 import { getTourRequests } from "../../../../api/report-service";
+import { useToast } from "../../../../store/providers/toast-provider";
+import { IoMdCheckmarkCircleOutline} from "react-icons/io";
+import { TbFaceIdError } from "react-icons/tb";
 
 
 const AdminTourRequestsReport = () => {
   const [loading, setLoading] = useState(false);
-  const toast = useRef(null);
+  const { showToast } = useToast();
 
 
 
@@ -32,19 +35,24 @@ const AdminTourRequestsReport = () => {
 
     
   const loadData = async (values) => {
-    console.log(values)
     setLoading(true);
     try {
       const resp = await getTourRequests(values);
-      console.log(resp);
+      showToast({
+        severity: 'success',
+        summary: 'success',
+        detail: 'report printer successfully',
+        life: 3000,
+        icon: <IoMdCheckmarkCircleOutline  size={50} />,
+      })
     } catch (err) {
-      const errMsg = Object.values(err?.response?.data)[1]?.message;
-      console.log(errMsg);
-      toast.current.show({
+      const errMsg =err?.response?.data?.message;
+      showToast({
         severity: "error",
         summary: "Error!",
         detail: errMsg,
         life: 3000,
+        icon: <TbFaceIdError  size={50} />,
       });
     } finally {
       setLoading(false);
@@ -71,13 +79,12 @@ const AdminTourRequestsReport = () => {
 
   return (
     <Container className="admin-report-container">
-      <Toast ref={toast} />
-     
       <Row className="admin-report-form-row">
       <Col xs={12} sm={10} md={10} lg={11} className="admin-report-form-col">
       <Form className="admin-report-form" noValidate >
         <Row className="admin-report-title-row"><span className="admin-report-title">Tour Requests</span></Row>
     <Row className="admin-report-form-row">
+      <Col className="admin-report-form-col">
           <Form.Group className="form-group" controlId="startDate">
             <Form.Control
               type="date"
@@ -90,7 +97,8 @@ const AdminTourRequestsReport = () => {
               {formik.errors.startDate}
             </Form.Control.Feedback>
           </Form.Group>
-
+          </Col>
+          <Col className="admin-report-form-col">
           <Form.Group className="form-group" controlId="endDate">
             <Form.Control
               type="date"
@@ -103,7 +111,8 @@ const AdminTourRequestsReport = () => {
               {formik.errors.endDate}
             </Form.Control.Feedback>
           </Form.Group>
-         
+          </Col>
+          <Col  className="admin-report-form-col">
           <Form.Group className="form-group" controlId="status">
             <Form.Select
               className="form-group"
@@ -111,6 +120,9 @@ const AdminTourRequestsReport = () => {
               isInvalid={isInValid(formik, "status")}
               isValid={isValid(formik, "status")}
             >
+               <option value="" disabled hidden>
+                    Status
+                  </option>
               {config?.tourRequestStatus.status.map((status,index) => (
                 <option key={status} value={index}>
                   {status}
@@ -118,6 +130,7 @@ const AdminTourRequestsReport = () => {
               ))}
             </Form.Select>
           </Form.Group>
+          </Col>
           </Row>
       </Form>
       </Col>

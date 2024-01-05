@@ -66,7 +66,7 @@ const MyAdverts = () => {
               
           }
           <div className='text'>
-            <Link to={`/${adverts.slug}`} >{adverts.title}</Link>
+            <Link to={`/advert/${adverts.slug}`} >{adverts.title}</Link>
             <p>{adverts.country.name + " " + adverts.city.name + " " + adverts.district.name }</p>
             <p>{"$" + adverts.price}</p>
           </div>
@@ -82,7 +82,6 @@ const MyAdverts = () => {
 
   const getOperationButtons = (row) => {
     if (row.builtIn) return null;
-    // console.log(row)
 
     return (
 
@@ -144,7 +143,6 @@ const MyAdverts = () => {
 
 
   const handleEdit = (row) => {
-    // console.log(row);
     dispatch(setCurrentRecord(row));
     navigate('/ad/edit');
 
@@ -187,12 +185,10 @@ const getViewLikeTour = (adverts) => {
   const getFavoritesCountForAdvert = async (id) => {
     try {
       const resp = await getFavoritesCount(id);
-      // console.log(resp);
       setFavoritesCounts(prevFavorites => ({
         ...prevFavorites,
         [id]: resp,
       }));
-      // console.log(favoritesCounts);
     } catch (err) {
       console.error("Error getting favorites count:", err);
     } 
@@ -201,12 +197,10 @@ const getViewLikeTour = (adverts) => {
   const getTourRequestCountForAdvert = async (id) => {
     try {
       const resp = await getTourRequestCount(id);
-      // console.log(resp);
       setTourRequestCounts(prevTourRequest => ({
         ...prevTourRequest,
         [id]: resp,
       }));
-      // console.log(tourRequestCounts);
     } catch (err) {
       console.error("Error getting Tour Request count:", err);
     } 

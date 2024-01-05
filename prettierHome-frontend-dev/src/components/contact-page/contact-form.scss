@@ -1,50 +1,75 @@
 @use "../../styles/variables" as v;
 
 .contact-form {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 400px;
-  border-radius: 20px;
-  padding: 14px;
+  border-radius: 10px;
+  margin-left: 60px;
+  transform: translateY(-50%);
+  overflow: hidden;
+  padding: 16px;
+  background-color: white;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 10px 2px rgba(v.$color2, 0.3), 0 0 5px 1px rgba(v.$color2, 0.4);
+  margin-bottom: -50%;
 
-  label {
-    margin-bottom: 10px;
-    font-weight: 300;
+  @media screen and (max-width: 767px) {
+    margin: 0 10px;
+    transform: translateY(0);
+  }
 
-    input,
-    textarea {
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .form-label{
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .form-input-group {
+      position: relative;
+
+      input,
+      textarea {
+        width: 100%;
+        border-radius: 8px;
+        background-color: v.$color5-light;
+      }
+
+      textarea{
+        max-height: 380px;
+        min-height: 38px;
+      }
+
+      .formik-feedback {
+        position: absolute;
+        bottom: -20px;
+      }
+    }
+
+
+    .recaptcha-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    button {
       width: 100%;
-      padding: 6px;
-      margin-top: 4px;
-      border: none;
-      border-radius: 8px;
-      background-color: #E2E1E1;
-    }
-
-    textarea {
-      padding: 10px;
-    }
-  }
-  button {
-    font-weight: 500;
-    font-size: 1.3rem;
-    padding: 10px;
-    background-color: v.$color4;
-    color: v.$color2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  
-    &:hover {
-      background-color: v.$color1;
+      font-weight: 500;
+      background-color: v.$color4;
       color: v.$color2;
-    }
-  
-    .recaptcha {
-      width: 500px !important;
+      border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: v.$color1;
+        color: v.$color2;
+      }
     }
   }
-}
 
- 
+
+}

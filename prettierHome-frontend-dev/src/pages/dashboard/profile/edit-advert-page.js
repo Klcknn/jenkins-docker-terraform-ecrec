@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAdvertById, updateAdvertByCustomer } from "../../../api/adverts-service";
 import PageHeader from "../../../components/common/page-header";
 import Spacer from "../../../components/common/spacer";
@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 
 const EditAdvertPage = () => {
   const {currentRecord } = useSelector(state => state.misc);
-// console.log("şuan bu : "+ currentRecord.id);
   const [loading, setLoading] = useState(false);
   const [flag, setflag] = useState(false);
   const [display, setDisplay] = useState([]);
@@ -114,7 +113,6 @@ const EditAdvertPage = () => {
         detail: "Advert updated successfully",
         life: 3000,
       });
-      // navigate("/my-adverts");
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
       showToast({

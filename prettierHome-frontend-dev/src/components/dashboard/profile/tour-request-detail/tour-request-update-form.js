@@ -5,14 +5,14 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setListRefreshToken,
-  setOperation,
+  setOperation,setCurrentRecord
 } from "../../../../store/slices/misc-slice";
-import { swalAlert } from "../../../../helpers/function/swal";
 import { useFormik } from "formik";
 import ButtonLoader from "../../../common/button-loader";
 import { isValid, isInValid } from "../../../../helpers/function/forms";
@@ -22,8 +22,11 @@ import {
   tourRequestUpdate,
 } from "../../../../api/tour-requests-service";
 import "../tour-request-detail/tour-request-update-form.scss";
+import { useLocation } from 'react-router-dom';
+import { useToast } from "../../../../store/providers/toast-provider";
 
 const generateTimeOptions = () => {
+  
   const options = [];
   for (let hour = 0; hour < 24; hour++) {
     for (let minute of ["00", "30"]) {
@@ -35,12 +38,17 @@ const generateTimeOptions = () => {
 };
 const TourRequestUpdateForm = () => {
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const dispatch = useDispatch();
+  const {listRefreshToken } = useSelector(state => state.misc);
   const { currentRecord } = useSelector((state) => state.misc);
-  // console.log(currentRecord)
-  const formattime=formatTime(currentRecord?.tourTime);
+  if (currentRecord === null && location && location.state !== undefined) {
+    dispatch(setCurrentRecord(location.state));
+  }
+  const { showToast } = useToast();
+  const formattime = formatTime(currentRecord?.tourTime);
 
-  console.log(formattime);
+
   const initialValues = {
     ...currentRecord,
     tourDate: currentRecord?.tourDate,
@@ -57,15 +65,22 @@ const TourRequestUpdateForm = () => {
   const handleCancel = async () => {
     try {
       const resp = await tourRequestCancel(id);
-      console.log(resp);
       dispatch(setOperation("null"));
       dispatch(setListRefreshToken(Math.random()));
-      swalAlert(" Tour request status set to canceled", "success");
+      showToast({
+        severity: "success",
+        summary: "Tour request canceled",
+        detail: "Tour request status set to canceled",
+        life: 2000,
+      });
     } catch (err) {
-      console.log(err);
       const errMsg = err.response.data.message && err.response.data;
-
-      swalAlert(errMsg, "error");
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: errMsg,
+        life: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -73,22 +88,28 @@ const TourRequestUpdateForm = () => {
 
   const onSubmit = async (values) => {
     setLoading(true);
-    console.log(values);
     const payload = {
       ...values,
       tourTime: formatTime(values.tourTime),
     };
-    console.log(payload);
     try {
       const resp = await tourRequestUpdate(id, payload);
-      console.log(resp);
       dispatch(setOperation("null"));
       dispatch(setListRefreshToken(Math.random()));
-      swalAlert("TourRequest created successfully", "success");
+      showToast({
+        severity: "success",
+        summary: "TourRequest created",
+        detail: "TourRequest created successfully",
+        life: 2000,
+      });
     } catch (err) {
-      console.log(err);
-      const errMsg = err?.response?.data?.tourDate
-      swalAlert(errMsg, "error");
+      const errMsg = err?.response?.data?.tourDate;
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: errMsg,
+        life: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -99,6 +120,10 @@ const TourRequestUpdateForm = () => {
     onSubmit,
     enableReinitialize: true,
   });
+
+  useEffect(() => {
+    
+  }, [listRefreshToken]);
 
   return (
     <Container className="tour-request-update-container">
@@ -128,6 +153,7 @@ const TourRequestUpdateForm = () => {
               {...formik.getFieldProps("tourDate")}
               isInvalid={isInValid(formik, "tourDate")}
               isValid={isValid(formik, "tourDate")}
+              min={new Date().toISOString().split("T")[0]}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.tourDate}
@@ -145,30 +171,31 @@ const TourRequestUpdateForm = () => {
               } ${isValid(formik, "tourTime") ? "is-valid" : ""}`}
               {...formik.getFieldProps("tourTime")}
             >
-              {currentRecord?.tourTime && (
-                <option
-                  key={currentRecord.tourTime}
-                  value={currentRecord.tourTime}
-                >
-                  {currentRecord.tourTime}
-                </option>
-              )}
-              {generateTimeOptions().map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.tourTime}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+            
+                {currentRecord?.tourTime && (
+                  <option
+                    key={currentRecord.tourTime}
+                    value={currentRecord.tourTime}
+                  >
+                    {currentRecord.tourTime}
+                  </option>
+                )}
+                {generateTimeOptions().map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.tourTime}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
         </Row>
-        <Row xs={12} md={2} lg={12}  className="tour-request-update-button-row">
-          <Col  className="tour-request-update-button-col">
+        <Row xs={12} md={2} lg={12} className="tour-request-update-button-row">
+          <Col className="tour-request-update-button-col">
             <Button
-            className="tour-request-update-button-calcel"
+              className="tour-request-update-button-calcel"
               onClick={handleCancel}
               variant="danger"
               type="button"
@@ -177,9 +204,9 @@ const TourRequestUpdateForm = () => {
               {loading ? <ButtonLoader /> : null} Cancel
             </Button>
           </Col>
-          <Col  className="tour-request-update-button-col">
+          <Col className="tour-request-update-button-col">
             <Button
-            className="tour-request-update-button-update"
+              className="tour-request-update-button-update"
               variant="danger"
               type="submit"
               disabled={!formik.isValid || loading}

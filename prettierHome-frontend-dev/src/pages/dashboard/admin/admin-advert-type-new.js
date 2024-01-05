@@ -10,6 +10,7 @@ import ButtonComponent from "../../../components/common/button-component";
 import Spacer from "../../../components/common/spacer";
 import "../../../components/dashboard/admin/advert-types/advert-type.scss";
 import { useToast } from "../../../store/providers/toast-provider";
+import { MdSaveAlt } from "react-icons/md";
 
 const AdminAdvertTypeNew = () => {
   const { showToast } = useToast();
@@ -73,8 +74,11 @@ const AdminAdvertTypeNew = () => {
               formik={formik}
               loading={loading}
               type="submit"
-              text="Create"
-            ></ButtonComponent>
+              text="CREATE"
+              style={{ borderRadius: "10px", padding: "10px 55px" }}
+            >
+              <MdSaveAlt className="fs-4" />
+            </ButtonComponent>
           </div>
         </Form>
       </Container>

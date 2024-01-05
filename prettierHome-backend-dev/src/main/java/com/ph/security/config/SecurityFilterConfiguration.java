@@ -71,14 +71,22 @@ public class SecurityFilterConfiguration {
             "/users/forgot-password",
             "/users/reset-password",
             "/adverts/search",
-            "/index*",
+            "/categories/all",
+            "/advert-types/all",
+            "/countries/all",
+            "/cities/search/**",
+            "/districts/search/**",
+            "/adverts/cities/**",
+            "/adverts/categories",
+            "/adverts/popular/**",
             "/static/**",
             "/*.js",
             "/*.json",
             "/*.css",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger*/**"
+            "/swagger*/**",
+            "/adverts/details/**"
     };
 
 

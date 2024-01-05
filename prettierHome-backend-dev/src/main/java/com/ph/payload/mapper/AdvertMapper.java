@@ -120,6 +120,7 @@ public class AdvertMapper {
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .image(imageMapper.toImageResponse(getFeaturedImage(advert.getImages())))
                 .slug(advert.getSlug())
+                .location(advert.getLocation())
                 .build();
     }
 
@@ -130,6 +131,7 @@ public class AdvertMapper {
         return AdvertTypeResponse.builder()
                 .id(advertType.getId())
                 .title(advertType.getTitle())
+                .builtIn(advertType.isBuiltIn())
                 .build();
     }
 
@@ -157,6 +159,7 @@ public class AdvertMapper {
                 .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
 //                .images(sortedByFeatured(advert.getImages()))
                 .slug(advert.getSlug())
+                .userId(advert.getUser().getId())
                 .build();
     }
 

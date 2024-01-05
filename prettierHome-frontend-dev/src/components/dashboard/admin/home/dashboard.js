@@ -21,11 +21,9 @@ const Dashboard = () => {
     try {
 
       const resp = await getStatistics();
-      // console.log(resp);
       setStatistics(resp);
 
     } catch (err) {
-      // console.log(err);
     }
   };
 

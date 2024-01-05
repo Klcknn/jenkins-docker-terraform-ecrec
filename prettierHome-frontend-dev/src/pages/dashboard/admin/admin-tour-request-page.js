@@ -8,8 +8,6 @@ const AdminTourRequestPage = () => {
 
     return (
         <>
-        
-            <Spacer minHeight={50} />
             <AdminTourRequest   />
             <Spacer />
         

@@ -1,13 +1,15 @@
 @use "../../../../styles/variables" as v;
 
 .admin-report-container {
-  background-color: v.$color5-light;
-  width: 90% !important;
+  background-color: v.$color10;
+  width: 80% !important;
   padding-right: 0 !important;
   object-fit: cover;
   margin: 0;
   margin-left: 35px;
-  padding-left:0;
+  padding-left:0!important;
+  min-width:230px;
+  border-radius: 15px;
 
   .admin-report-form-row {
     width: 100%;
@@ -30,32 +32,50 @@
         }
         .admin-report-form-row {
           width: 100%;
-        
-         
-          
-          .form-group {
-            flex: 0 0 160px;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 5px;
-         
-            .form-control {
-              flex: 0 0 130px;
-              display: flex;
-              align-items: start;
-              border: 0;
-              border-bottom: 2px solid v.$color7;
-            }
-            .form-select {
-              flex: 0 0 150px;
-              display: flex;
+          .admin-report-form-col{
+            padding: 2px; 
+            max-width: 140px;
+            min-width: 120px;
+            .form-group {
+              position: relative;
+              flex: 0 0 110px;
+              flex-direction: column;
               align-items: center;
-              margin-right: 2px;
-              border: 0;
-              border-bottom: 2px solid v.$color7;
-              padding: 6px;
+
+              .form-control {
+                flex: 0 0 130px;
+                display: flex;
+                align-items: start;
+                border: 0;
+                border-bottom: 2px solid v.$color7;
+  
+                
+              }
+              .form-select {
+                flex: 0 0 150px;
+                display: flex;
+                align-items: center;
+                margin-right: 2px;
+                border: 0;
+                border-bottom: 2px solid v.$color7;
+                padding: 6px;
+              }
+              .invalid-feedback {
+                font-size: 0.9rem;
+                font-weight: normal;
+                position: absolute;
+                bottom: -20px;
+                right: -12px;
+                color: rgb(232, 63, 2);
+              }
+              .is-valid{
+                border-color:v.$color6;
+             
+                
+              }
             }
           }
+         
         }
       }
     }
@@ -67,13 +87,21 @@
       margin: 0;
       padding: 15px;
       min-width: 50px;
-
+      border-radius: 0 15px 15px 0;
+      @media screen and (max-width: 576px) {
+        border-radius: 0 0 15px 15px;
+      }
       svg {
         width: 50px;
         height: auto;
         max-width: 100px;
         min-width: 50px;
-      
+        cursor: pointer;
+        color:v.$color2;
+      &:hover  {
+        color: v.$color1;
+
+      }
       }
     }
   }

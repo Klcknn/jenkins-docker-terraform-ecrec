@@ -1,194 +1,246 @@
-import { useFormik } from 'formik';
-import React, { useState } from 'react'
-import { Button, Card, Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
+import { useFormik } from "formik";
+import React, { useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
 import * as Yup from "yup";
-import PasswordInput from '../common/password-input';
-import { swalAlert } from '../../helpers/function/swal';
-import ButtonLoader from '../common/button-loader';
-import { Link, useNavigate } from 'react-router-dom';
-import {isValid, isInValid} from "../../helpers/function/forms";
-import { register } from '../../api/auth-service';
-import ReactInputMask from 'react-input-mask-next';
-import "./login-form.scss";
-import { FaUserLarge } from "react-icons/fa6";
-import { FaPhoneAlt } from "react-icons/fa";
-import { IoMdMail } from "react-icons/io";
-import { AiOutlineForm } from "react-icons/ai";
-
+import PasswordInput from "../common/password-input";
+import ButtonLoader from "../common/button-loader";
+import { Link, useNavigate } from "react-router-dom";
+import { isValid, isInValid } from "../../helpers/function/forms";
+import { register } from "../../api/auth-service";
+import ReactInputMask from "react-input-mask-next";
+import "./auth-form.scss";
+import { HiEnvelope, HiUser, HiPhone } from "react-icons/hi2";
+import { PiUserCirclePlusFill } from "react-icons/pi";
+import { useToast } from "../../store/providers/toast-provider";
+import { sideContent } from "../../helpers/config/side-content";
+import PasswordSuggestion from '../common/password-suggestion'
 
 const RegisterForm = () => {
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const [focus, setFocus] = useState(false);
+  const navigate = useNavigate();
+  const { showToast } = useToast();
 
-    const initialValues ={
-        firstName:"",
-        lastName:"",
-        phone:"",
-        password: "",
-        email: "",
-        confirmPassword: ""
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    phone: "",
+    password: "",
+    email: "",
+    confirmPassword: "",
+  };
 
-    }
-
-    const validationSchema = Yup.object({
-        firstName: Yup.string().required("First name is required").min(1, "At least 1 characters").max(50, "Max 50 characters"),
-        lastName: Yup.string().required("Last name is required").min(1, "At least 1 characters").max(50, "Max 50 characters"),
-        phone: Yup.string()
-        .required("Phone is required")
-        .matches(/\(\d{3}\) \d{3}-\d{4}/g, "Invalid phone number"),
-        password:Yup.string()
-        .required("Password is required")
-        .min(8, "At least 8 characters")
-        .max(30, "Max 30 characters")
-        .matches(/[a-z]+/g, "One lowercase char")
-        .matches(/[A-Z]+/g, "One uppercase char")
-        .matches(/[\d+]+/g, "One number")
-        .matches(/[!@#$%^&*()_+\-={};':"|,.<>?]+/, "One special character"),
-        email:Yup.string().email("Invalid email").max(50, "Max 50 characters").required("Email is required"),
-        confirmPassword: Yup.string()
+  const validationSchema = Yup.object({
+    firstName: Yup.string()
+      .required("First name is required")
+      .min(1, "At least 1 characters")
+      .max(50, "Max 50 characters"),
+    lastName: Yup.string()
+      .required("Last name is required")
+      .min(1, "At least 1 characters")
+      .max(50, "Max 50 characters"),
+    phone: Yup.string()
+      .required("Phone is required")
+      .matches(/\(\d{3}\) \d{3}-\d{4}/g, "Invalid phone number"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "At least 8 characters")
+      .max(30, "Max 30 characters")
+      .matches(/[a-z]+/g, "One lowercase char")
+      .matches(/[A-Z]+/g, "One uppercase char")
+      .matches(/[\d+]+/g, "One number")
+      .matches(/[!@#$%^&*()_+\-={};':"|,.<>?]+/, "One special character"),
+    email: Yup.string()
+      .email("Invalid email")
+      .max(50, "Max 50 characters")
+      .required("Email is required"),
+    confirmPassword: Yup.string()
       .required("Confirm password is required")
       .oneOf([Yup.ref("password")], "Passwords must match"),
+  });
 
-    });
+  const onSubmit = async (values, { resetForm }) => {
+    setLoading(true);
+    try {
+      const resp = await register(values);
+      resetForm();
+      navigate("/login");
+    } catch (error) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: Object.values(error.response.data)[0],
+        life: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const onSubmit = async (values, { resetForm }) => {
-        setLoading(true);
-        try {
-          const resp = await register(values);
-          console.log(resp)
-          resetForm();
-          navigate("/login");
-
-        } catch (err) {
-            console.log(err)
-            const errMsg = Object.values(err.response.data)[0];
-            swalAlert(errMsg, "error");
-            } finally {
-          setLoading(false);
-        }
-      };
-
-
-    const formik = useFormik({
-        initialValues,
-        validationSchema,
-        onSubmit
-    })
-
-    
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit,
+  });
 
   return (
     <Container>
-        <Row className="justify-content-center">
-            <Col md={8} lg={6}>
-                <Card className="login-card border-0">
-                    <Card.Body>
+      <div className='auth-form-container'>
+        <Row>
+          <Col xs={12} lg={5} className='p-0'>
+            {
+              focus
+                ?
+                <PasswordSuggestion formik={formik} field={"password"} />
+                :
+                <div className='auth-form-side'>
+                  <div className="brand-logo">
+                    <Image src="/logos/logo-white.png" />
+                    <div>
+                      Turn Your Dream Home into Reality with PrettierHomes
+                    </div>
+                  </div>
+                  {sideContent.authForm.map((item, index) => (
+                    <div className="auth-form-side-item" key={index}>
+                      <div className="auth-form-side-item-icon" style={item.iconStyle}>
+                        {item.icon}
+                      </div>
+                      <div className="auth-form-side-item-text">
+                        {item.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+            }
+          </Col>
+          <Col xs={12} lg={7} className='auth-form-main'>
+            <div className="form-wrapper">
+              <Form
+                className="auth-form"
+                noValidate
+                onSubmit={formik.handleSubmit}
+              >
+                <InputGroup className="mb-4">
+                  <InputGroup.Text className={`${isInValid(formik, "firstName") ? "invalid" : ""}`}>
+                    <HiUser />
+                  </InputGroup.Text>
+                  <Form.Control
+                    className="user-input"
+                    type="text"
+                    placeholder="First Name"
+                    {...formik.getFieldProps("firstName")}
+                    isInvalid={isInValid(formik, "firstName")}
+                    isValid={isValid(formik, "firstName")}
+                  />
+                  <Form.Control.Feedback type="invalid" className="form-feedback">
+                    {formik.errors.firstName}
+                  </Form.Control.Feedback>
+                </InputGroup>
 
-                        <Form className="login-form" noValidate onSubmit={formik.handleSubmit}>
+                <InputGroup className="mb-4">
+                  <InputGroup.Text className={`${isInValid(formik, "lastName") ? "invalid" : ""}`}>
+                    <HiUser />
+                  </InputGroup.Text>
+                  <Form.Control
+                    className="user-input"
+                    type="text"
+                    placeholder="Last Name"
+                    {...formik.getFieldProps("lastName")}
+                    isInvalid={isInValid(formik, "lastName")}
+                    isValid={isValid(formik, "lastName")}
+                  />
+                  <Form.Control.Feedback type="invalid" className="form-feedback">
+                    {formik.errors.lastName}
+                  </Form.Control.Feedback>
+                </InputGroup>
 
-                            <InputGroup className="mb-4" controlId="firstName">
-                                <InputGroup.Text id="basic-addon1"><FaUserLarge /></InputGroup.Text>
-                                <Form.Control
-                                    className="user-input"
-                                    type="text"
-                                    placeholder="First Name"
+                <InputGroup className="mb-4">
+                  <InputGroup.Text className={`${isInValid(formik, "phone") ? "invalid" : ""}`}>
+                    <HiPhone />
+                  </InputGroup.Text>
+                  <Form.Control
+                    className="user-input"
+                    as={ReactInputMask}
+                    mask="(999) 999-9999"
+                    type="text"
+                    placeholder="(XXX) XXX-XXXX"
+                    {...formik.getFieldProps("phone")}
+                    isValid={isValid(formik, "phone")}
+                    isInvalid={isInValid(formik, "phone")}
+                  />
+                  <Form.Control.Feedback type="invalid" className="form-feedback">
+                    {formik.errors.phone}
+                  </Form.Control.Feedback>
+                </InputGroup>
 
-                                    {...formik.getFieldProps("firstName")}
-                                    isInvalid={isInValid(formik, "firstName")}
-                                    isValid={isValid(formik, "firstName")}                                      
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {formik.errors.firstName}
-                                </Form.Control.Feedback>
-                            </InputGroup>
+                <InputGroup className="mb-4">
+                  <InputGroup.Text className={`${isInValid(formik, "email") ? "invalid" : ""}`}>
+                    <HiEnvelope />
+                  </InputGroup.Text>
+                  <Form.Control
+                    className="user-input"
+                    type="text"
+                    placeholder="Email"
+                    {...formik.getFieldProps("email")}
+                    isInvalid={isInValid(formik, "email")}
+                    isValid={isValid(formik, "email")}
+                  />
+                  <Form.Control.Feedback type="invalid" className="form-feedback">
+                    {formik.errors.email}
+                  </Form.Control.Feedback>
+                </InputGroup>
 
-                            <InputGroup className="mb-4" controlId="lastName">
-                                <InputGroup.Text id="basic-addon1"><FaUserLarge /></InputGroup.Text>
-                                <Form.Control
-                                    className="user-input"
-                                    type="text"
-                                    placeholder="Last Name"
 
-                                    {...formik.getFieldProps("lastName")}
-                                    isInvalid={isInValid(formik, "lastName")}
-                                    isValid={isValid(formik, "lastName")}                                      
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {formik.errors.lastName}
-                                </Form.Control.Feedback>
-                            </InputGroup>
+                <PasswordInput
+                  formik={formik}
+                  field="password"
+                  setFocus={setFocus}
+                />
 
-                            <InputGroup className="mb-4" controlId="phone">
-                                <InputGroup.Text id="basic-addon1"><FaPhoneAlt/></InputGroup.Text>
-                                <Form.Control
-                                    className="user-input"
-                                    as={ReactInputMask}
-                                    mask="(999) 999-9999"
-                                    type="text"
-                                    placeholder="Phone (XXX) XXX-XXXX"
+                <PasswordInput
+                  placeholder="Confirm Password"
+                  formik={formik}
+                  field="confirmPassword"
+                />
 
-                                    {...formik.getFieldProps("phone")}
-                                    isValid={isValid(formik, "phone")}
-                                    isInvalid={isInValid(formik, "phone")}                                    
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {formik.errors.phone}
-                                </Form.Control.Feedback>
-                            </InputGroup>
 
-                            <InputGroup className="mb-4" controlId="email">
-                                <InputGroup.Text id="basic-addon1"><IoMdMail /></InputGroup.Text>
-                                <Form.Control
-                                    className="user-input"
-                                    type="text"
-                                    placeholder="Email"
+                <div className="form-submit-button">
+                  <Button
+                    variant="secondary"
+                    type="submit"
+                    className="submit-button"
+                    disabled={!formik.isValid || loading}
+                  >
+                    {loading ?
+                      <ButtonLoader size={20} />
+                      :
+                      <PiUserCirclePlusFill size={20} />
+                    }
+                    REGISTER
+                  </Button>
+                </div>
 
-                                    {...formik.getFieldProps("email")}
-                                    isInvalid={isInValid(formik, "email")}
-                                    isValid={isValid(formik, "email")}                                      
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {formik.errors.email}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-
-                            <Form.Group className="mb-2" controlId="password">
-                                
-                                <PasswordInput 
-                                    {...formik.getFieldProps("password")}
-                                    isInvalid={isInValid(formik, "password")}
-                                    isValid={isValid(formik, "password")}
-                                    error={formik.errors.password}
-                                />
-                            </Form.Group>
-                            <Form.Group className="" controlId="confirmPassword">
-                                
-                                <PasswordInput 
-                                placeholderText="Confirm Password"
-                                    {...formik.getFieldProps("confirmPassword")}
-                                    isInvalid={isInValid(formik, "confirmPassword")}
-                                    isValid={isValid(formik, "confirmPassword")}
-                                    error={formik.errors.confirmPassword}
-                                />
-                            </Form.Group>
-
-                            <div className='login-button'>
-                                <Button variant="primary" type="submit" className="w-75 fs-5" disabled={!(formik.isValid) || loading}>
-                                    {loading ? <ButtonLoader/>  : <AiOutlineForm className='fs-4' />} REGISTER
-                                </Button>
-                            </div>
-
-                            <div className='register text-muted'>
-                                <div>If you already have an account.</div>
-                                <div><Link to="/login">Login now!</Link></div>
-                            </div>                        
-                        </Form>
-                    </Card.Body>
-                </Card>
-            </Col>
+                <div className="have-account">
+                  <div>
+                    If you already have an account
+                  </div>
+                  <Link className="have-account-link" to="/login">Login</Link>
+                </div>
+              </Form>
+            </div>
+          </Col>
         </Row>
+      </div>
     </Container>
-  )
-}
+  );
+};
 
-export default RegisterForm
+export default RegisterForm;

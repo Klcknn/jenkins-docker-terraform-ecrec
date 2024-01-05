@@ -5,6 +5,9 @@ import { getUser } from "./api/auth-service";
 import { login, logout } from "./store/slices/auth-slice";
 import { useDispatch } from "react-redux";
 import { PopupProvider } from "./store/providers/toast-provider";
+import { getFavoriteAdvertIdList } from "./api/user-service";
+import { fetchFavs, resetFavs } from "./store/slices/fav-slice";
+import { getFromLocalStorage } from "./helpers/function/encrypted-storage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +19,19 @@ function App() {
       dispatch(login(resp));
     } catch (err) {
       dispatch(logout());
+      dispatch(resetFavs());
+    } finally {
+      loadFavs();
+    }
+  };
+
+  const loadFavs = async () => {
+    try {
+      if (getFromLocalStorage("token")) {
+        const resp = await getFavoriteAdvertIdList();
+        dispatch(fetchFavs(resp));
+      }
+    } catch (err) {
     } finally {
       setLoading(false);
     }

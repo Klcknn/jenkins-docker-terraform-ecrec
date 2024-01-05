@@ -14,6 +14,7 @@ import { PiHandPalmDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { useToast } from '../../../store/providers/toast-provider';
 import { TbFaceIdError } from "react-icons/tb";
+import { toggleFav } from '../../../store/slices/fav-slice';
 
 const MyFavorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -39,7 +40,7 @@ const MyFavorites = () => {
         }
 
         <div className='text'>
-        <Link to={`/${favorite.slug}`} >{favorite.title}</Link>
+        <Link to={`/advert/${favorite.slug}`} >{favorite.title}</Link>
           <p>{favorite.country.name + " " + favorite.city.name + " " + favorite.district.name}</p>
           <p>{"$" + favorite.price}</p>
         </div>
@@ -82,6 +83,7 @@ const MyFavorites = () => {
 
     try {
       await deleteFavorite(id);
+      dispatch(toggleFav(id));
       showToast({
         severity: "success",
         summary: "Deleted",
@@ -91,7 +93,6 @@ const MyFavorites = () => {
       });
       dispatch(setListRefreshToken(Math.random()))
     } catch (err) {
-      console.log(err); 
       showToast({
         severity: "error",
         summary: "Error",
@@ -110,7 +111,6 @@ const MyFavorites = () => {
       const resp = await getFavorites();
         setFavorites(resp);
     } catch (err) {
-      //console.error(err);
       showToast({
         severity: "error",
         summary: "Error",

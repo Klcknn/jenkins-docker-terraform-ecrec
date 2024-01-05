@@ -8,11 +8,14 @@ import "../reports/admin-adverts-report.scss";
 import { TfiPrinter } from "react-icons/tfi";
 import { getUsers } from "../../../../api/report-service";
 import { config } from "../../../../helpers/config";
+import { useToast } from "../../../../store/providers/toast-provider";
+import { IoMdCheckmarkCircleOutline} from "react-icons/io";
+import { TbFaceIdError } from "react-icons/tb";
 
 
 const AdminUsersReport = () => {
   const [loading, setLoading] = useState(false);
-  const toast = useRef(null);
+  const { showToast } = useToast();
 
 
 
@@ -25,19 +28,24 @@ const AdminUsersReport = () => {
   });
 
   const loadData = async (role) => {
-    console.log(role)
     setLoading(true);
     try {
       const resp = await getUsers(role);
-      console.log(resp);
+      showToast({
+        severity: 'success',
+        summary: 'success',
+        detail: 'report printer successfully',
+        life: 3000,
+        icon: <IoMdCheckmarkCircleOutline  size={50} />,
+      })
     } catch (err) {
-      const errMsg = Object.values(err?.response?.data)[1]?.message;
-      console.log(errMsg);
-      toast.current.show({
+      const errMsg = err?.response?.data?.message;
+      showToast({
         severity: "error",
         summary: "Error!",
         detail: errMsg,
         life: 3000,
+        icon: <TbFaceIdError  size={50} />,
       });
     } finally {
       setLoading(false);
@@ -61,13 +69,12 @@ const AdminUsersReport = () => {
 
   return (
     <Container className="admin-report-container">
-      <Toast ref={toast} />
-     
       <Row className="admin-report-form-row">
       <Col xs={12} sm={10} md={10} lg={11} className="admin-report-form-col">
       <Form className="admin-report-form" noValidate >
         <Row className="admin-report-title-row"><span className="admin-report-title">Users</span></Row>
     <Row className="admin-report-form-row">
+      <Col className="admin-report-form-col">
     <Form.Group className="form-group" controlId="role">
             <Form.Select
               className="form-group"
@@ -75,6 +82,9 @@ const AdminUsersReport = () => {
               isInvalid={isInValid(formik, "role")}
               isValid={isValid(formik, "role")}
             >
+               <option value="" disabled hidden>
+                    Role
+                  </option>
               {config?.selectRoles.roles.map((role) => (
                 <option key={role} value={role}>
                   {role}
@@ -82,8 +92,7 @@ const AdminUsersReport = () => {
               ))}
             </Form.Select>
           </Form.Group>
-
-          
+          </Col>
           </Row>
       </Form>
       </Col>

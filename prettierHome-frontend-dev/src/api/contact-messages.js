@@ -15,8 +15,9 @@ export const sendMessage = async (payload) => {
 };
 
 // TODO J01 - GetAll()
-export const getAllContactMessage = async (page=0, size=20, sort="id", type="asc") => {
-  const resp = await axios.get(`${baseURL}/contact-messages?page=${page}&size=${size}&sort=${sort}&type=${type}`,  {
+export const getAllContactMessage = async (query, page=0, size=20, sort="id", type="asc") => {
+  
+  const resp = await axios.get(`${baseURL}/contact-messages?query=${query}&page=${page}&size=${size}&sort=${sort}&type=${type}`,  {
     headers: getAuthHeader(),
   });
   const data = await resp.data;

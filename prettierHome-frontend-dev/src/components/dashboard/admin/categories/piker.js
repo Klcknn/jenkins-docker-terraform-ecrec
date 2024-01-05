@@ -11,7 +11,6 @@ const IconPicker = ({ icons, defaultValue, onChange }) => {
   });
 
   const { icon, isOpen, position } = iconState;
-  // console.log(icon);
   const buttonRef = useRef(null);
 
   useEffect(() => {

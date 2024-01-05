@@ -10,7 +10,7 @@ import AdvertProperties from "../../../components/dashboard/profile/advert-edit-
 import { Button, Container, Form } from "react-bootstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { TbHomeCog } from "react-icons/tb";
+import { MdEditNote } from "react-icons/md";
 import ButtonComponent from "../../../components/common/button-component";
 import DisplayImages from "../../../components/dashboard/profile/advert-edit-new/display-images";
 import AdvertEditImage from "../../../components/dashboard/profile/advert-edit-new/advert-edit-image";
@@ -173,7 +173,6 @@ const AdminAdvertsEdit = () => {
 
     try {
       const resp = await updateAdvertByAdmin(currentRecord.id, payload);
-      console.log(resp);
       showToast({
         severity: "success",
         summary: "Success!",
@@ -221,12 +220,11 @@ const AdminAdvertsEdit = () => {
     onSubmit,
     enableReinitialize: true,
   });
-  //   console.log(formik.values.statusForAdvert)
 
   return (
     <>
       {flag && (
-        <>
+        <div className="adminn-adverts-edit-page">
           <Form
             noValidate
             onSubmit={formik.handleSubmit}
@@ -245,7 +243,7 @@ const AdminAdvertsEdit = () => {
                   handleDelete();
                 }}
               >
-                Delete
+                DELETE
               </Button>
 
               <ButtonComponent
@@ -253,9 +251,9 @@ const AdminAdvertsEdit = () => {
                 formik={formik}
                 loading={loading}
                 type="submit"
-                text="Save"
+                text="UPDATE"
               >
-                <TbHomeCog />
+                <MdEditNote className="fs-4" />
               </ButtonComponent>
             </Container>
             <UserInfo
@@ -290,7 +288,7 @@ const AdminAdvertsEdit = () => {
             </Fieldset>
           </Container>
           <Spacer />
-        </>
+        </div>
       )}
     </>
   );

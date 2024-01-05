@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import PageHeader from "../../../components/common/page-header";
 import Spacer from "../../../components/common/spacer";
 import AdvertCommon from "../../../components/dashboard/profile/advert-edit-new/advert-common";
@@ -12,13 +12,11 @@ import { useFormik } from "formik";
 import { TbHomePlus } from "react-icons/tb";
 import ButtonComponent from "../../../components/common/button-component";
 import { saveAdvert } from "../../../api/adverts-service";
-import { swalAlert } from "../../../components/common/swal";
-import { Toast } from "primereact/toast";
+import { useToast } from "../../../store/providers/toast-provider";
 
 const NewAdvertPage = () => {
   const [loading, setLoading] = useState(false);
-  const toast = useRef(null);
-
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const initialValues = {
     title: "",
@@ -104,11 +102,17 @@ const NewAdvertPage = () => {
       formData.append("advert", JSON.stringify(advert));
 
       const resp = await saveAdvert(formData);
-      swalAlert("Advert created successfully", "success");
-      navigate("/ad/edit");
+      showToast({
+        severity: 'success',
+        summary: 'Advert created',
+        detail: 'Advert created successfully',
+        life: 2000,
+
+      })
+      navigate("/my-adverts");
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
-      toast.current.show({
+      showToast({
         severity: "error",
         summary: "Error!",
         detail: errMsg,
@@ -127,7 +131,6 @@ const NewAdvertPage = () => {
 
   return (
     <>
-    <Toast ref={toast} />
       <Form noValidate onSubmit={formik.handleSubmit}>
         <PageHeader title="NEW ADVERT" />
         <Spacer />

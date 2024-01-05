@@ -6,6 +6,7 @@ const initialState = {
     listRefreshToken: null,
     componentMode: null,
     currentObject: null,
+    advertsCurrentRecord: null,
 
 }
 
@@ -28,11 +29,13 @@ export const miscSlice = createSlice({
         },
         setCurrentObject: (state, action) => {
             state.currentObject = action.payload;
+        }, setAdvertsCurrentRecord: (state, action) => {
+            state.advertsCurrentRecord= action.payload;
         }
 
 
     }
 })
 
-export const { setOperation, setCurrentRecord, setListRefreshToken, setComponentMode, setCurrentObject } = miscSlice.actions;
+export const { setOperation, setCurrentRecord, setListRefreshToken, setComponentMode, setCurrentObject,setAdvertsCurrentRecord } = miscSlice.actions;
 export default miscSlice.reducer;

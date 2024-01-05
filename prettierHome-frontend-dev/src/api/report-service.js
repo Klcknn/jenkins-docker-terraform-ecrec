@@ -26,7 +26,6 @@ export const getProperties = async (amount) => {
         headers:  getAuthHeader()
         
     });
-    console.log(resp);
     const data =  resp.data;
     return data;
 };
@@ -35,7 +34,6 @@ export const getUsers = async (role) => {
         headers:  getAuthHeader()
         
     });
-    console.log(resp);
     const data =  resp.data;
     return data;
 };

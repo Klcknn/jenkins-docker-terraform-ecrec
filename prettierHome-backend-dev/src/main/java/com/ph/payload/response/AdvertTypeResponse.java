@@ -13,5 +13,6 @@ public class AdvertTypeResponse implements Serializable {
 
     private Long id;
     private String title;
+    private boolean builtIn;
 
 }

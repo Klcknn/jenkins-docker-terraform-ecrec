@@ -12,3 +12,9 @@ export const formatTime = (timeString) => {
     const formattedTime = momentTime.format("hh:mm A");
     return formattedTime;
 };
+export const formatCreatedAt = (createdAtString) => {
+    const inputFormat = "YYYY-MM-DDTHH:mm:ss.SSSSSS";
+    const momentCreatedAt = moment(createdAtString, inputFormat);
+    const formattedCreatedAt = momentCreatedAt.format("DD MMM YY - hh:mm A");
+    return formattedCreatedAt;
+};

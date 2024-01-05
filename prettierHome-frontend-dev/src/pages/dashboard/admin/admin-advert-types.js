@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import { VscSearch } from "react-icons/vsc";
 import Spacer from "../../../components/common/spacer";
 import { LuPencil } from "react-icons/lu";
@@ -15,6 +15,7 @@ import {
 } from "../../../store/slices/misc-slice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../store/providers/toast-provider";
+import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 
 const AdminAdvertTypes = () => {
   const { showToast } = useToast();
@@ -80,7 +81,8 @@ const AdminAdvertTypes = () => {
   return (
     <Container className="advert-types-page">
       <div className="advert-types-page-search-div">
-        <div className="search-input">
+        {/*ESKİ YÖNTEM */}
+        {/* <div className="search-input">
           <Form.Control
             type="text"
             placeholder="Type Something"
@@ -91,13 +93,42 @@ const AdminAdvertTypes = () => {
           <Button className="search-icon" onClick={() => findAdvertTypes()}>
             <VscSearch />
           </Button>
-        </div>
+        </div> */}
+        <InputGroup className="search-input">
+          <Form.Control
+            placeholder="Type Something"
+            x
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+          />
+          {searchTerm && (
+            <InputGroup.Text
+              className="clear-wrapper"
+              variant="outline-secondary"
+            >
+              <Button
+                className=" clear-btn btn-link"
+                onClick={() => setSearchTerm("")}
+              >
+                <HiXMark size={20} strokeWidth={0.5} />
+              </Button>
+            </InputGroup.Text>
+          )}
+
+          <Button
+            onClick={() => findAdvertTypes()}
+            className="search-button"
+            variant="outline-secondary"
+          >
+            <HiMagnifyingGlass strokeWidth={1} />
+          </Button>
+        </InputGroup>
 
         <Button
           className="add-new-btn"
           onClick={() => navigate("/dashboard/advert-type-new")}
         >
-          Add New
+          New
         </Button>
       </div>
       <Spacer minHeight={50} />

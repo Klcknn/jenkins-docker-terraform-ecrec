@@ -1,40 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useSelector } from "react-redux";
-import { Toast } from "primereact/toast";
-import { ConfirmPopup } from "primereact/confirmpopup";
-import {  getLogs } from "../../../../api/log-service";
-import "./admin-user-logs.scss";
 import { Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { formatCreatedAt} from "../../../../helpers/function/format-date-time"
+import { useLocation } from 'react-router-dom';
+import { TbFaceIdError } from "react-icons/tb";
+import { getLogs } from "../../../../api/log-service";
+import "./admin-user-logs.scss";
+import { useToast } from "../../../../store/providers/toast-provider";
 
-const AdminUserLogs= () => {
+const AdminUserLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
   const [totalRows, setTotalRows] = useState(0);
-  const { listRefreshToken,currentRecord } = useSelector((state) => state.misc);
-  const toast = useRef(null);
- const id=currentRecord?.id;
- console.log(id);
- const navigate = useNavigate();
+  const { listRefreshToken } = useSelector((state) => state.misc);
+  const location = useLocation();
+  const id = location.state?.id;
 
-  const showError = (errMsg) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error",
-      detail:`${errMsg}`,
-      life: 3000,
-    });
-  };
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
 
   const [lazyState, setlazyState] = useState({
     first: 0,
@@ -44,24 +28,22 @@ const AdminUserLogs= () => {
     sortOrder: null,
   });
 
-  
-  
-  
-
   const loadData = async (page) => {
-    
     try {
       const resp = await getLogs(id,page,lazyState.rows);
-      console.log(resp);
+
       setLogs(resp.content);
-      console.log(resp.content);
-      // console.log(tourRequest)
       setTotalRows(resp.totalElements);
-      
     } catch (err) {
       const errMsg = Object.values(err?.response?.data)[1]?.message
-       console.log(errMsg);
-      showError(errMsg);
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: Object.values(err.response.data)[0],
+        life: 3000,
+        icon: <TbFaceIdError   size={50} />,
+      });
+
     } finally {
       setLoading(false);
     }
@@ -70,23 +52,14 @@ const AdminUserLogs= () => {
   const onPage = (event) => {
     setlazyState(event);
   };
- 
 
-  
   useEffect(() => {
-    if( currentRecord!==null){
-      loadData(lazyState.page);
-    }
-    
-   
-  }, [ lazyState, listRefreshToken]);
+    loadData(lazyState.page);
+  }, [lazyState, listRefreshToken]);
 
   return (
     <>
-    
-      <Toast ref={toast} />
-      <ConfirmPopup />
-      <Container className="user-log-container">
+      <Container className="admin-user-edit-log-container">
         <div className="user-log-datatable-wrapper">
           <div className="user-log-card">
             <DataTable
@@ -104,10 +77,12 @@ const AdminUserLogs= () => {
               paginatorTemplate={
                 "PrevPageLink PageLinks CurrentPageReport NextPageLink"
               }
-             
             >
-              <Column header="Action" field="message" ></Column>
-              <Column header="Date" field="createdAt" ></Column>
+              <Column header="Action" field="message"></Column>
+              <Column
+                header="Date"
+                body={(rowData) => formatCreatedAt(rowData.createdAt)}
+              ></Column>
             </DataTable>
           </div>
         </div>

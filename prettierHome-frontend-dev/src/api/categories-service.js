@@ -7,7 +7,7 @@ const baseURL = config.api.baseUrl;
 
 //C04
 export const saveCategory = async (payload) => {
-   const resp = await axios.post(`${baseURL}/categories`, payload, {
+   const resp = await axios.post(`${baseURL}/categories/save`, payload, {
       headers: getAuthHeader(),
    });
       
@@ -26,7 +26,7 @@ export const getAdminCategory = async (page=0, size=10, sort="seq", type="asc", 
 
 //C06
 export const deleteCategory = async (id) => {
-  const resp= await axios.delete(`${baseURL}/categories/${id}`, {
+  const resp= await axios.delete(`${baseURL}/categories/delete/${id}`, {
     headers: getAuthHeader()
   });
 
@@ -36,7 +36,7 @@ export const deleteCategory = async (id) => {
 
 //C03
 export const getCategoryById = async (id) => {
-   const resp = await axios.get(`${baseURL}/categories/${id}`, {
+   const resp = await axios.get(`${baseURL}/categories/one/${id}`, {
       headers: getAuthHeader(),
    });
          
@@ -46,7 +46,7 @@ export const getCategoryById = async (id) => {
 
 //C05
 export const updateCategory = async (id, payload) => {
-   const resp = await axios.put(`${baseURL}/categories/${id}`, payload, {
+   const resp = await axios.put(`${baseURL}/categories/update/${id}`, payload, {
       headers: getAuthHeader(),
    });
       

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Spacer from "../../../components/common/spacer";
 import { Container, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { TbFaceIdError } from "react-icons/tb";
@@ -11,17 +10,26 @@ import AdminCategoryNewCommon from "../../../components/dashboard/admin/categori
 import { useToast } from "../../../store/providers/toast-provider";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import PropertyKeyNewPage from "../../../components/dashboard/admin/categories/property-key-new-page";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentRecord } from "../../../store/slices/misc-slice";
+import { MdSaveAlt } from "react-icons/md";
+import { Fieldset } from "primereact/fieldset";
+import PropertyKeyListForNewProperty from "../../../components/dashboard/admin/categories/property-key-list-for-new-property-page";
 
 const AdminCategoryNewPage = () => {
+
+  const { currentRecord } = useSelector(state => state.misc);
+  const [isAddedOrEdited, setIsAddedOrEdited] = useState(false);
 
   const dispatch = useDispatch();
   const [categoryId, setCategoryId] = useState(null)
   const [loading, setLoading] = useState(false);
   const {showToast}  = useToast();
-  const navigate = useNavigate();
   const [show, setShow] = useState(false)
+
+  const handleParentStateChange = () => {
+    setIsAddedOrEdited(!isAddedOrEdited);
+  };
 
   const initialValues = {
     title: normalizeTitle(""),
@@ -63,7 +71,6 @@ function normalizeTitle(value) {
       setCategoryId(resp.id)
       dispatch(setCurrentRecord(resp));
       setShow(true)
-      // resetForm();
 
       showToast({
         severity: "success",
@@ -94,25 +101,29 @@ function normalizeTitle(value) {
 
   return (
     <>
-      <Form noValidate onSubmit={formik.handleSubmit}>
+      <Form noValidate onSubmit={formik.handleSubmit} className="category-form">
         <AdminCategoryNewCommon formik={formik} />
         <Container className="button-component">
           <ButtonComponent
             formik={formik}
             loading={loading}
             type="submit"
-            text="Create"
+            text="CREATE"
             style={{borderRadius:"10px", padding:"10px 55px"}}
           >
+            <MdSaveAlt style={{marginTop:"-3px", fontSize:"1.1rem"}} />
           </ButtonComponent>
         </Container>
         <Spacer height={20} />
-        <Container
+        <Container className="new-property-key"
           style={{ display: show ? "block" : "none" }}>
-          <PropertyKeyNewPage categoryId={categoryId} />
+            <Fieldset legend="Property Key Add" toggleable collapsed={false}>
+              <PropertyKeyNewPage categoryId={categoryId} isAddedOrEdited={isAddedOrEdited} onStateChange={handleParentStateChange}/>
+              <Spacer height={20} />
+              <PropertyKeyListForNewProperty id={currentRecord ? currentRecord.id : null} isAddedOrEdited={isAddedOrEdited}/>
+            </Fieldset>
         </Container>
         <Spacer height={20} />
-      
       </Form>
     </>
   );

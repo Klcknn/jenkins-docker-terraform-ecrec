@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { getAdvertsBySlug } from "../../../../api/adverts-service";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setCurrentRecord,
-  setListRefreshToken,
-} from "../../../../store/slices/misc-slice";
+import { useSelector } from "react-redux";
 import "./advert-detail-page-header.scss";
 import { MdLocationOn } from "react-icons/md";
 import { IoMdPricetag } from "react-icons/io";
@@ -14,38 +9,21 @@ import { IoEye } from "react-icons/io5";
 
 function calculateWeeksSinceCreation(createdAt) {
   const creationDate = new Date(createdAt);
-
   const currentDate = new Date();
-
   const timeDifference = currentDate - creationDate;
-
   const weeksDifference = timeDifference / (1000 * 60 * 60 * 24 * 7);
-
   return Math.floor(weeksDifference);
 }
 
-const AdvertDetailPageHeader = (props) => {
-  const slug = props.slug;
-  const { currentRecord } = useSelector((state) => state.misc);
-  const dispatch = useDispatch();
+const AdvertDetailPageHeader = () => {
 
-  const loadAdvert = async () => {
-    try {
-      const advert = await getAdvertsBySlug(slug);
-      dispatch(setCurrentRecord(advert));
-      dispatch(setListRefreshToken(true));
-      console.log(advert);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { advertsCurrentRecord } = useSelector((state) => state.misc);
 
   useEffect(() => {
-    loadAdvert();
+    
   }, []);
 
-  const advert = currentRecord;
-  console.log(advert);
+  const advert = advertsCurrentRecord;
   const createdAt = advert?.createdAt;
   const weeksSinceCreation = calculateWeeksSinceCreation(createdAt);
   return (

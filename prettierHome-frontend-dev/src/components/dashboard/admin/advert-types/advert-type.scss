@@ -4,7 +4,7 @@
   width: 50% !important;
   form {
     input {
-      background-color: v.$color5;
+      background-color: v.$color6;
     }
     .advert-types-new-button {
       display: flex;
@@ -17,7 +17,7 @@
   width: 50% !important;
   form {
     input {
-      background-color: v.$color5;
+      background-color: v.$color6;
     }
     .advert-types-edit-btn-group {
       @media screen and (max-width: 432px) {
@@ -26,10 +26,16 @@
       display: flex;
       justify-content: end;
       gap: 10px;
+      button {
+        border-radius: 10px;
+      }
       .delete-btn {
-        color: white;
+        background-color: v.$color9;
+        border: none;
+        border-radius: 10px;
+        color: v.$color2;
         width: 70%;
-        @media screen and (min-width: "1200px") {
+        @media screen and (min-width: 1200px) {
           width: 35%;
         }
       }
@@ -40,6 +46,10 @@
 .advert-types-page {
   width: 70% !important;
   .advert-types-page-search-div {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
     @media screen and (max-width: 500px) {
       display: block;
       .search-input {
@@ -54,39 +64,80 @@
       .search-icon {
         right: 0 !important;
       }
+      .add-new-btn {
+        margin-left: 0 !important;
+      }
     }
-    display: flex;
-    align-items: center;
-    position: relative;
+
     .search-input {
-      display: flex;
-      align-items: center;
-      width: 75%;
       input {
-        border-radius: 20px;
-        padding: 15px;
-        width: 100%;
+        border-radius: 10px;
+        padding: 12px;
+        border-right: 0;
+        border-color: gray;
+        &:focus {
+          box-shadow: none;
+          outline: none;
+        }
       }
-      .search-icon {
-        margin-left: 10px;
-        padding: 15px;
-        border-radius: 20px;
-        position: absolute;
-        right: 25%;
+      .clear-wrapper {
+        background: none;
+        border: 1px solid gray;
+        border-left: 0;
+        .clear-btn {
+          border: none;
+          border-radius: 50%;
+          padding: 6px 8px;
+          color: black;
+          &:hover {
+            background: none;
+            color: v.$color-error-light;
+            transform: scale(1.2);
+          }
+        }
       }
+      .search-button {
+        border-radius: 10px;
+        background-color: v.$color8;
+        color: white;
+        &:hover {
+          background-color: v.$color7;
+          color: white;
+        }
+      }
+      button {
+        border: 1px solid gray;
+        padding: 10px 15px;
+      }
+      /*ESKİ YÖNTEM */
+      // display: flex;
+      // align-items: center;
+      // width: 75%;
+      // input {
+      //   border-radius: 20px;
+      //   padding: 15px;
+      //   width: 100%;
+      // }
+      // .search-icon {
+      //   margin-left: 10px;
+      //   padding: 15px;
+      //   border-radius: 20px;
+      //   position: absolute;
+      //   right: 25%;
+      // }
     }
     .add-new-btn {
-      padding: 15px;
-      border-radius: 20px;
+      padding: 12px 15px;
+      border-radius: 10px;
       margin-left: 5px;
       @media screen and (max-width: 856px) {
-        padding: 15px 8px;
+        padding: 15px;
       }
     }
   }
   .table-data {
     .table-header {
-      width: 85%;
+      width: 97%;
       padding: 20px 30px;
       display: flex;
       justify-content: space-between;
@@ -94,11 +145,23 @@
     .table-rows {
       display: flex;
       align-items: center;
-      @media screen and (max-width: 1200px) {
-        width: 90%;
-      }
-      width: 85%;
-      background-color: v.$color5;
+      // @media screen and (max-width: 1545px) {
+      //   width: 87%;
+      // }
+      // @media screen and (max-width: 1400px) {
+      //   width: 88%;
+      // }
+      // @media screen and (max-width: 1200px) {
+      //   width: 90%;
+      // }
+      // @media screen and (max-width: 1100px) {
+      //   width: 93%;
+      // }
+      // @media screen and (max-width: 1000px) {
+      //   width: 100%;
+      // }
+
+      background-color: v.$color6;
       border-radius: 15px;
       padding: 15px 30px;
       display: flex;
@@ -117,7 +180,7 @@
           }
         }
       }
-      @media screen and (max-width: 500px) {
+      @media screen and (max-width: "500px") {
         .btn-div {
           button {
             padding: 0 2px;
@@ -135,8 +198,13 @@
     display: flex;
     justify-content: end;
     gap: 10px;
+    button {
+      border-radius: 10px;
+    }
     .delete-btn {
-      background-color: v.$color2-light;
+      background-color: v.$color9;
+      color: v.$color2;
+      border: none;
       width: 30% !important;
       @media screen and (max-width: "1050px") {
         width: 60% !important;
@@ -174,33 +242,36 @@
   }
 }
 //FieldSet
-.p-fieldset-legend {
-  position: relative;
-  float: none !important;
-  // width: unset;
-  width: 180px;
-  a {
-    font-size: 20px;
-    background-color: v.$color6;
-    color: v.$color1;
-    text-decoration: none;
+.adminn-adverts-edit-page {
+  .p-fieldset-legend {
+    position: relative;
+    float: none !important;
+    // width: unset;
+    width: 180px;
+    a {
+      font-size: 20px;
+      background-color: v.$color6;
+      color: v.$color1;
+      text-decoration: none;
+      padding: 15px;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 0;
+      height: 0;
+      border-top: 10px solid v.$color2-light;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+    }
   }
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: 0;
-    height: 0;
-    border-top: 20px solid v.$color2-light;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
+  .p-toggleable-content {
+    content: none;
+    min-width: 375px;
+    border: 1px solid v.$color2-light;
+    border-radius: 10px;
   }
-}
-.p-toggleable-content {
-  content: none;
-  min-width: 375px;
-  border: 1px solid v.$color2-light;
-  border-radius: 10px;
 }

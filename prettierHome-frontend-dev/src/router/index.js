@@ -40,7 +40,6 @@ import AdminTourRequestPage from "../pages/dashboard/admin/admin-tour-request-pa
 import AdminTourRequestDetail from "../components/dashboard/admin/tour-requests/admin-tour-request-detail";
 import AdminCategoryEditPage from "../pages/dashboard/admin/admin-category-edit-page";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -127,23 +126,16 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/advert/:slug",
+        element: <AdvertDetailPage />,
+      },
+      {
         path: "/ad/edit",
         element: (
           <PrivateRoute roles={config.pageRoles.myAdverts}>
             <EditAdvertPage />
           </PrivateRoute>
         ),
-           children: [
-          {
-            index: true,
-            element: <EditAdvertPage />,
-          },
-          {
-            path: "my-adverts/:slug",
-            element: <AdvertDetailPage />,
-          },
-        ],
-
       },
       {
         path: "unauthorized",
@@ -166,36 +158,36 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AdminDashboardPage />
+        element: <AdminDashboardPage />,
       },
       {
         path: "categories",
         children: [
           {
             index: true,
-            element: <AdminCategoryListPage />
+            element: <AdminCategoryListPage />,
           },
           {
             path: "category-new",
-            element: <AdminCategoryNewPage />
+            element: <AdminCategoryNewPage />,
           },
           {
             path: "category-edit",
-            element: <AdminCategoryEditPage />
-          }
-        ]
+            element: <AdminCategoryEditPage />,
+          },
+        ],
       },
       {
         path: "tour-requests",
         children: [
           {
             index: true,
-            element: <AdminTourRequestPage />
+            element: <AdminTourRequestPage />,
           },
           {
             path: "admin-tour-request-detail",
-            element: <AdminTourRequestDetail />
-          }
+            element: <AdminTourRequestDetail />,
+          },
         ],
       },
       {
@@ -221,8 +213,8 @@ const router = createBrowserRouter([
       {
         path: "adverts-edit-admin",
         element: <AdminAdvertsEdit />,
-      }
-
+      },
+      {
         path: "users/admin-user-edit",
         element: <AdminUserEditPage />,
       },
@@ -237,9 +229,7 @@ const router = createBrowserRouter([
       {
         path: "contact-messages",
         element: <AdminContactMessageListPage />,
-      }
-
-
+      },
     ],
   },
 ]);

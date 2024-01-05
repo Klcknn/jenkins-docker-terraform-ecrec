@@ -107,6 +107,7 @@ const AdminAdvertEditCommon = ({ formik }) => {
             label={"Status"}
             type={"Status"}
             options={statusForAdverts}
+            optionValue={true}
           />
         </Col>
         <Col>

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
-import ImageModal from "../../../common/image-model";
+import ImageModal from "../../../common/image-modal";
 import './advert-images.scss';
 
 const AdvertImages = ({ formik, field }) => {

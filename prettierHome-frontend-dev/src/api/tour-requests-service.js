@@ -15,7 +15,6 @@ const baseURL = config.api.baseUrl;
           headers: getAuthHeader(),
         });
         const data = resp.data;
-        console.log(data)
         return data;
       } catch (error) {
         console.error("Error in get tour request id", error);
@@ -30,7 +29,6 @@ const baseURL = config.api.baseUrl;
           headers: getAuthHeader(),
         });
         const data = resp.data;
-        console.log(data)
         return data;
       } catch (error) {
         console.error("Error in get tour request id", error);
@@ -46,7 +44,6 @@ const baseURL = config.api.baseUrl;
           headers: getAuthHeader(),
         });
         const data = resp.data;
-        console.log(data)
         return data;
       } catch (error) {
         console.error("Error in get tour request id", error);
@@ -140,4 +137,12 @@ export const getAllTourRequestByAdminManager = async (
   return data;
 
 }
+export const getAllTourRequestsByUserId = async (id,page = 0, size = 20,) => {
+  const resp = await axios.get(`${baseURL}/tour-requests/getAll/${id}?page=${page}&size=${size}`,{
+      headers: getAuthHeader(),
+    }
+  );
+  const data = await resp.data;
+  return data;
+};
 

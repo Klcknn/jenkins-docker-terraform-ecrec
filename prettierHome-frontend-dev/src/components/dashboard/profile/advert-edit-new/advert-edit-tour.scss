@@ -88,7 +88,7 @@
             justify-content: flex-end;
             gap: 5px;
 
-            @media screen and (max-width: 992px) {
+            @media screen and (max-width: 991px) {
               flex-flow: wrap;
             }
             .btn-delete {
@@ -215,7 +215,7 @@
 //   }
 // }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-thead > tr > th,
   .tr-datatable-wrapper .p-datatable.tr-datatable .p-datatable-tfoot > tr > td {
     display: none !important;

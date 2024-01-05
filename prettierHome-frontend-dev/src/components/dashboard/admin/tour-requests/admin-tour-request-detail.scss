@@ -12,7 +12,7 @@
         justify-content: space-around!important;
         align-items: center;
 
-        @media screen and (max-width: 1200px) {
+        @media screen and (max-width: 1199px) {
             flex-direction: column;
         }
 
@@ -30,7 +30,7 @@
             } 
             }
 
-            @media screen and (max-width: 992px) {
+            @media screen and (max-width: 991px) {
                 .ad-thumbnail {
                   height: 250px;
                   width: 300px;
@@ -57,7 +57,7 @@
                     margin-bottom: 35px;
                 }
 
-                @media screen and (max-width: 1200px) {
+                @media screen and (max-width: 1199px) {
                     .c-title{
                         display: flex!important;
                         flex-direction: row;
@@ -94,7 +94,7 @@
 
                 }
 
-                @media screen and (max-width: 1200px) {
+                @media screen and (max-width: 1199px) {
 
                    .col{
                        display: flex!important;
@@ -127,7 +127,7 @@
                     }
                 }
 
-                @media screen and (max-width: 1200px) {
+                @media screen and (max-width: 1199px) {
 
                     .col{
                         display: flex!important;

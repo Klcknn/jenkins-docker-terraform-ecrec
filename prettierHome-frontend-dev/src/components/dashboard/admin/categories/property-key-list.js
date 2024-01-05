@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import "./property-key.scss";
 import { FiTrash } from "react-icons/fi";
 import { LuPencil } from "react-icons/lu";
-import { setComponentMode, setCurrentObject, setCurrentRecord, setListRefreshToken, setOperation } from '../../../../store/slices/misc-slice';
+import { setComponentMode, setCurrentObject } from '../../../../store/slices/misc-slice';
 import { prettyConfirm } from "../../../../helpers/function/toast-confirm";
 import { PiHandPalmDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { useToast } from '../../../../store/providers/toast-provider';
 import { TbFaceIdError } from "react-icons/tb";
 import { deletePropertyKey, getPropertyKeysOfCategory } from '../../../../api/property-key-service';
-import { setToLocalStorage } from '../../../../helpers/function/encrypted-storage';
 import { Navigate } from 'react-router-dom';
+import { MdSaveAlt } from 'react-icons/md';
 
 const PropertyKeyList = ({id, isAddedOrEdited}) => {
 
   const [propertyKey, setPropertyKey] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { listRefreshToken } = useSelector(state => state.misc);
   const dispatch = useDispatch();
   const { showToast } = useToast();
 
@@ -68,9 +67,7 @@ const PropertyKeyList = ({id, isAddedOrEdited}) => {
         life: 2000,
         icon: <IoMdCheckmarkCircleOutline size={50} />,
       });
-      // dispatch(setListRefreshToken(Math.random()));
     } catch (err) {
-      console.log(err);
       showToast({
         severity: "error",
         summary: "Error",
@@ -86,23 +83,15 @@ const PropertyKeyList = ({id, isAddedOrEdited}) => {
   const handleEdit = (row) => {
     dispatch(setCurrentObject(row));
     dispatch(setComponentMode("edit"));
-    
-     // Assume you have a function to update the local state based on the edited row
-    // updateLocalStateAfterEdit(row);
-    
+
   };
-  // const updateLocalStateAfterEdit = (editedRow) => {
-  //   setPropertyKey((prevPropertyKey) =>
-  //     prevPropertyKey.map((item) => (item.id === editedRow.id ? editedRow : item))
-  //   );
-  // };
+
 
   const loadData = async (categoryId) => {
     try {
       const resp = await getPropertyKeysOfCategory(categoryId);
       setPropertyKey(resp);
     } catch (err) {
-      console.error(err);
       const errMsg = Object.values(err.response.data)[1];
       showToast({
         severity: "error",
@@ -179,7 +168,8 @@ const PropertyKeyList = ({id, isAddedOrEdited}) => {
               className='btn-addPK' style={{ borderRadius: "10px", padding: "10px 55px", marginLeft: "10px" }}
               onClick={handleAddPropertyKey}
             >
-              Add 
+               <MdSaveAlt style={{marginTop:"-3px", marginRight:"4px", fontSize:"1.1rem"}} />
+              ADD 
             </Button>
           </div>
         </div>

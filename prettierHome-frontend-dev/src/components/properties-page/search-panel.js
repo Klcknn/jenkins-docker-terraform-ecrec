@@ -159,7 +159,6 @@ const SearchPanel = () => {
                             feedback={false}
                         />
                     </Col>
-
                     <Col style={{ display: "flex", gap: "10px" }}>
                         <div style={{ width: '50%' }}>
                             <InputText
@@ -181,7 +180,6 @@ const SearchPanel = () => {
                         </div>
                     </Col>
                     <Col>
-
                         <InputSelect
                             formik={formik}
                             field={"at"}
@@ -190,7 +188,6 @@ const SearchPanel = () => {
                             options={advertTypes}
                             feedback={false}
                         />
-
                     </Col>
                     <Col>
                         <InputSelect
@@ -234,7 +231,6 @@ const SearchPanel = () => {
                             feedback={false}
                         />
                     </Col>
-
                     <Col style={{ display: "flex", alignItems: "center" }}>
                         <div style={{ width: "100%" }}>
                             <ButtonComponent

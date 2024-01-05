@@ -11,6 +11,7 @@ import AdminTourRequestsReport from '../../../components/dashboard/admin/reports
 const AdminReportsPage = () => {
   return (
     <>
+    <Spacer minHeight={50}/>
     <AdminAdvertsReport/>
     <Spacer minHeight={50}/>
     <AdminMostPopularProperties/>

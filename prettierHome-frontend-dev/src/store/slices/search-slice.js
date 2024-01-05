@@ -1,12 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    searchParams: {
-        q: "",
-        advert_type_id: "",
-        category_id: "",
-    },
-    displayMode: "grid",
+    searchParams: null,
+    displayMode: "card",
 }
 
 export const searchSlice = createSlice({

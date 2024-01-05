@@ -1,11 +1,11 @@
 import React from "react";
 import { Row, Col, Container} from "react-bootstrap";
 import InputText from "../../../common/input-text";
-import '../../profile/advert-edit-new/advert-common.scss';
+import './property-key-new.scss';
 import InputSelect from "../../../common/input-select";
-import InputSelectForProperty from "./input-select-for-property";
 
 const PropertyKey = ({ formik }) => {
+
   const keyTypeOptions = [
     {
       id: 0,
@@ -21,49 +21,51 @@ const PropertyKey = ({ formik }) => {
     },
   ];
 
-  const getSuffixOptions = [
-    {
-      id: 0,
-      name: "m²",
-    },
-    {
-      id: 1,
-      name: "km",
-    },
-    {
-      id: 2,
-      name: "cm",
-    },
-    {
-      id: 4,
-      name: "inç",
-    },
-  ];
+  // const getSuffixOptions = [
+  //   {
+  //     id: 0,
+  //     name: "m²",
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "km",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "cm",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "inç",
+  //   },
+  // ];
 
-  const getPrefixOptions = [
-    {
-      id: 0,
-      name: "%",
-    },
-    {
-      id: 1,
-      name: "$",
-    },
-    {
-      id: 2,
-      name: "₺",
-    },
-    {
-      id: 3,
-      name: "€",
-    },
-    {
-      id: 4,
-      name: "£",
-    },
-  ];       
+  // const getPrefixOptions = [
+  //   {
+  //     id: 0,
+  //     name: "%",
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "$",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "₺",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "€",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "£",
+  //   },
+  // ]; 
+  
+  
 return (
-    <Container className="advert-common">
+    <Container className="property-key-new">
       <Row>
         <InputText
           formik={formik}
@@ -79,26 +81,24 @@ return (
             formik={formik}
             label={"KeyType"}
             field={"keyType"}
-          options={keyTypeOptions}
-          optionValue={true}
+            options={keyTypeOptions}
+            optionValue={true}
           />
         </Col>
         <Col>
-        <InputSelectForProperty
+        <InputText
             formik={formik}
             label={"Prefix"}
             field={"prefix"}
-          options={getPrefixOptions}
-          optionValue={true}
+            placeholder={"prefix"}
           />
         </Col>
         <Col>
-        <InputSelectForProperty
+        <InputText
             formik={formik}
             label={"Suffix"}
             field={"suffix"}
-          options={getSuffixOptions}
-          optionValue={true}
+            placeholder={"suffix"}
         />
         </Col>
       </Row>

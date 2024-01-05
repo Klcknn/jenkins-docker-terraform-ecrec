@@ -4,30 +4,32 @@ import {Column} from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Image as FullImage } from 'primereact/image';
 import { Button, Container } from 'react-bootstrap';
-import { deleteTourRequest, getTourRequest } from '../../../../api/tour-requests-service';
+import { deleteTourRequest, getAllTourRequestsByUserId, getTourRequest } from '../../../../api/tour-requests-service';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiTrash } from "react-icons/fi";
 import { LuPencil } from "react-icons/lu";
-import { setCurrentRecord, setListRefreshToken} from '../../../../store/slices/misc-slice'
+import { setCurrentRecord, setListRefreshToken} from '../../../../store/slices/misc-slice';
 import { Link, useNavigate } from 'react-router-dom';
-import "./admin-user-tour-request-property.scss";
-import { prettyConfirm } from "../../../../helpers/function/toast-confirm";
+import "../admin-user-edit/admin-user-tour-request-property.scss";
+import { prettyConfirm } from '../../../../helpers/function/toast-confirm';
 import { PiHandPalmDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { TbFaceIdError } from "react-icons/tb";
 import { useToast } from '../../../../store/providers/toast-provider';
+import { useLocation } from 'react-router-dom';
 
 
 
-const AdminUserTourRequestProperty = () => {
-
+const MyTourRequest = () => {
   const [tourRequest, setTourRequest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
-  const { listRefreshToken } = useSelector(state => state.misc);
+  const { listRefreshToken} = useSelector(state => state.misc);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {showToast} = useToast()
+  const {showToast} = useToast();
+  const location = useLocation();
+  const id = location.state?.id;
 
    const [lazyState, setlazyState] = useState({
     first: 0,
@@ -106,7 +108,6 @@ const AdminUserTourRequestProperty = () => {
         });
       dispatch(setListRefreshToken(Math.random()))
     } catch (error) {
-      console.log(error); 
       showToast({
         severity: "error",
         summary: "Error",
@@ -120,15 +121,12 @@ const AdminUserTourRequestProperty = () => {
   };
 
 
-
-  
   const handleEdit = (row) => {
 
     dispatch(setCurrentRecord(row));
-    navigate('/tour-request-details');
+    navigate('/tour-request-details', { state: { ...row } });
   };
 
-  
   const getStatus = (tourRequest) => (
     <Tag
       value={tourRequest.status}
@@ -173,7 +171,7 @@ const getProperty = (tourRequest) => {
           </div>
         }
         <div className='text'>
-        <Link to={`/${tourRequest.advert.slug}`} >{tourRequest.advert.title}</Link>
+        <Link to={`/advert/${tourRequest.advert.slug}`} >{tourRequest.advert.title}</Link>
           <p>{tourRequest.advert.country.name + " " + tourRequest.advert.city.name + " " + tourRequest.advert.district.name }</p>
           <p>{"$" + tourRequest.advert.price}</p>
         </div>
@@ -197,40 +195,31 @@ const getProperty = (tourRequest) => {
 
     }
 
-    const loadData = async (page) => {
+    const loadData = async (id,page) => {
       try {
-        const resp = await getTourRequest(page, lazyState.rows);
-        // console.log(resp);
+        const resp = await getAllTourRequestsByUserId(id,page, lazyState.rows);
         setTourRequest(resp.content);
-        // console.log(tourRequest)
         setTotalRows(resp.totalElements);
        
       } catch (err) {
-        const errMsg = Object.values(err.response.data)[1]
-        // console.log(errMsg);
-        showToast({
-          severity: "error",
-          summary: "Error!",
-          detail: errMsg,
-          life: 3000,
-          icon: <TbFaceIdError  size={50} />,
-        });
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: Object.values(err.response.data)[0],
+        life: 3000,
+        icon: <TbFaceIdError   size={50} />,
+      });
       } finally {
         setLoading(false);
       }
   };
  
- 
-  
-  
   const narrowRowStyle = {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
       padding: "0 10px"
   };
-
- 
 
   const property = (tourRequest) => (
     <div  style={{ padding: "0 10px" }} > 
@@ -276,14 +265,14 @@ const getProperty = (tourRequest) => {
   
   useEffect(() => {
 
-    loadData(lazyState.page);
+    loadData(id,lazyState.page);
 
   }, [lazyState, listRefreshToken,]);
 
 
   return (
     <>
-      <Container className="admin-user-tourrequest-container " >
+      <Container className="admin-user-tour-request-container" >
         <div className="tr-datatable-wrapper">
           <div className="card">
             <DataTable   className='tr-datatable'
@@ -313,4 +302,4 @@ const getProperty = (tourRequest) => {
   );
 };
 
-export default AdminUserTourRequestProperty
+export default MyTourRequest

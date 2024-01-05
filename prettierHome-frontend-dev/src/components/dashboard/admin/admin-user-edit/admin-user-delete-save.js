@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import "../../profile/advert-edit-new/advert-common.scss";
 import { Toast } from "primereact/toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,26 +13,33 @@ import {
 } from "../../../../api/user-service";
 import { isValid, isInValid } from "../../../../helpers/function/forms";
 import ReactInputMask from "react-input-mask-next";
-import { AiFillLock } from "react-icons/ai";
 import ButtonLoader from "../../../common/button-loader";
 import "../../admin/admin-user-edit/admin-user-delete-save.scss";
 import {config} from "../../../../helpers/config";
 import { setListRefreshToken } from "../../../../store/slices/misc-slice";
-import { MdDelete } from "react-icons/md";
 import { MdSaveAlt } from "react-icons/md";
+import { useLocation } from 'react-router-dom';
+import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
+import { TbFaceIdError } from "react-icons/tb";
+import { PiHandPalmDuotone } from 'react-icons/pi';
+import { useToast } from '../../../../store/providers/toast-provider';
+import { prettyConfirm } from '../../../../helpers/function/toast-confirm';
 
 const AdminUserDeleteAndSave = () => {
-  const { currentRecord } = useSelector((state) => state.misc);
-  const id = currentRecord?.id;
-  console.log(currentRecord);
-  console.log(id);
+  const location = useLocation();
+  const id = location.state?.id;
   const [loading, setLoading] = useState(false);
-  const toast = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {listRefreshToken } = useSelector(state => state.misc);
+  const { showToast } = useToast();
+
   const initialValues = {
-   ...currentRecord
+  firstName:location.state.firstName,
+  lastName:location.state.lastName,
+  phone:location.state.phone,
+  email:location.state.email,
+  role:location.state.role
   };
 
   const validationSchema = Yup.object({
@@ -53,40 +60,68 @@ const AdminUserDeleteAndSave = () => {
       .required("Email is required"),
     role: Yup.string().required("Role is required"),
   });
+  const handleDelete = async (event) => {
+    
+
+    prettyConfirm({
+      event:event,
+      message: 'Are you sure you want to delete the user?',
+      icon: <PiHandPalmDuotone size={50} />,
+      acceptButtonType: 'danger',
+      handleAccept: () => confirmDelete(),
+      handleReject: () => {
+        showToast({
+          severity: 'warn',
+          summary: 'Canceled',
+          detail: 'User not deleted',
+          life: 2000,
+          icon: <IoMdCloseCircleOutline   size={50} />,
+        });
+      },
+    });
+  };
 
   
 
-  const onReset = async () => {
+  const confirmDelete = async () => {
     try {
       const data = await deleteUser(id);
-      console.log(data);
+      showToast({
+        severity: 'success',
+        summary: 'User deleted',
+        detail: 'User deleted successfully',
+        life: 2000,
+        icon: <IoMdCheckmarkCircleOutline  size={50} />,
+      })
       formik.resetForm();
       navigate("dashboard/users");
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
-     
-      toast.current.show({
+      showToast({
         severity: "error",
         summary: "Error!",
         detail: errMsg,
         life: 3000,
+        icon: <TbFaceIdError  size={50} />,
       });
     }
   };
 
   const onSubmit = async (values) => {
-    console.log(values)
     setLoading(true);
-
     try {
       const resp = await updateOneUser(id,values);
-      console.log(resp);
-      swalAlert("Advert created successfully", "success");
+      await showToast({
+        severity: "success",
+        summary: "Success!",
+        detail: "User type save successfully",
+        life: 3000,
+      });
       navigate("/dashboard/users");
       dispatch(setListRefreshToken(Math.random()));
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
-      toast.current.show({
+      showToast({
         severity: "error",
         summary: "Error!",
         detail: errMsg,
@@ -101,20 +136,19 @@ const AdminUserDeleteAndSave = () => {
     initialValues,
     validationSchema,
     onSubmit,
-    onReset,
     enableReinitialize: true,
   });
 
   useEffect(() => {
-    if(currentRecord===null) navigate("/dashboard/users");
+    
   }, [listRefreshToken]);
 
   return (
     <Container className="admin-user-edit-container">
-      <Toast ref={toast} />
-      <Form className="admin-user-edit-form" noValidate onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+      <Form className="admin-user-edit-form" noValidate onSubmit={formik.handleSubmit}>
         <Row>
-          <div className="admin-user-edit-input-group-first-row  mb-6">
+          
+          <Col className="admin-user-edit-input-group-first-row  mb-6">
         <Form.Label className="">First name</Form.Label>
         <InputGroup  controlId="firstName">
           <Form.Control
@@ -128,8 +162,8 @@ const AdminUserDeleteAndSave = () => {
             {formik.errors.firstName}
           </Form.Control.Feedback>
         </InputGroup>
-        </div>
-        <div className="admin-user-edit-input-group-first-row  mb-6">
+        </Col>
+        <Col className="admin-user-edit-input-group-first-row  mb-6">
         <Form.Label className="">Last name</Form.Label>
         <InputGroup controlId="lastName">
           <Form.Control
@@ -143,10 +177,10 @@ const AdminUserDeleteAndSave = () => {
             {formik.errors.lastName}
           </Form.Control.Feedback>
         </InputGroup>
-        </div>
+        </Col>
         </Row>
         <Row>
-          <div className="admin-user-edit-input-group mb-6">
+          <Col className="admin-user-edit-input-group mb-6">
         <Form.Label>Phone</Form.Label>
         <InputGroup  controlId="phone">
           <Form.Control
@@ -164,8 +198,8 @@ const AdminUserDeleteAndSave = () => {
             {formik.errors.phone}
           </Form.Control.Feedback>
         </InputGroup>
-        </div>
-        <div className="admin-user-edit-input-group mb-6">
+        </Col>
+        <Col className="admin-user-edit-input-group mb-6">
         <Form.Label>Email</Form.Label>
         <InputGroup  controlId="email">
           <Form.Control
@@ -179,8 +213,8 @@ const AdminUserDeleteAndSave = () => {
             {formik.errors.email}
           </Form.Control.Feedback>
         </InputGroup>
-        </div>
-        <div className="admin-user-edit-input-group mb-6">
+        </Col>
+        <Col className="admin-user-edit-input-group mb-6">
         <Form.Label>Roles</Form.Label>
         <InputGroup  controlId="role">
         
@@ -193,12 +227,14 @@ const AdminUserDeleteAndSave = () => {
         ))}
       </Form.Select>
       </InputGroup>
-      </div>
+      </Col>
         </Row>
        <Row className="admin-user-button-row">
         <Button
           variant="primary"
           type="reset"
+          onClick={(e) =>{handleDelete(e);
+          } }
           className="admin-user-button-delete"
           disabled={!formik.isValid || loading}
         >

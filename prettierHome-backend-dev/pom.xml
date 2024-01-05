@@ -17,13 +17,7 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-        
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>3.2.3</version>
-			<type>maven-plugin</type>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -148,36 +142,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.3</version> <!-- Update to the latest version -->
-            </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version> <!-- Update to a version that supports Java 17 -->
-				<executions>
-					<execution>
-						<goals>
-							<goal>toolchain</goal>
-						</goals>
-					</execution>
-      			</executions>
-				<configuration>
-					<toolchains>
-						<toolchain>
-							<type>jdk</type>
-							<provides>
-							<version>17</version>
-							</provides>
-							<configuration>
-								<jdkHome>/usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java</jdkHome>
-							</configuration>
-						</toolchain>
-					</toolchains>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
 </project>

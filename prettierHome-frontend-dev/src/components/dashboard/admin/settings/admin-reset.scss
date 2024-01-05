@@ -1,10 +1,16 @@
 @use "../../../../styles/variables" as v;
 
 .admin-reset-container {
-  width: 70%!important;
-  padding: 50px !important;
   position: relative;
+  width: 70%!important;
+  padding: 30px !important ;
   background-color: v.$color5-light;
+  min-width:250px;
+  padding-bottom: 10px!important;
+  border-radius: 15px;
+  @media screen and (max-width: 450px) {
+  padding:10px;
+   }
   .admin-reset-title-row {
     width: 100%;
     display: block;
@@ -14,26 +20,41 @@
   }
   .admin-reset-description-row {
     width: 100%;
-    display: block;
     margin-bottom: 10px;
+    text-align: justify;
+
     .span{
       font-size: large;
-      
+      display: inline-block;
+      padding-right:0;
+      @media screen and (max-width: 330px) {
+        font-size: 0.9rem; 
+       }
     }
   }
   .admin-reset-button-row {
-   position: absolute;
    bottom: 15px;
    right: 70px;
+   display: flex;
+    justify-content:end ;
+    padding:20px;
    
-
+   @media screen and (max-width: 330px) {
+    display: flex;
+    justify-content:center ;
+    right: 10px; /* Butonun sağ kenarını daha içeri taşıyabilirsin */
+      left: 10px; /* İstersen butonu sola yönlendirebilirsin */
+      bottom: 10px; 
+   }
     
     .admin-reset-button {
       width: 150px;
       text-align: center;
-   
-    
-      
+      border-radius: 7px;
+      @media screen and (max-width: 330px) {
+        font-size: 0.8rem; 
+        width:120px;
+       }
     }
   }
 }

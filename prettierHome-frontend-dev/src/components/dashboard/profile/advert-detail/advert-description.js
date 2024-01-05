@@ -5,19 +5,14 @@ import "./advert-description.scss"
 
 
 const AdvertDescription = () => {
-    const { currentRecord } = useSelector((state) => state.misc);
+    const { advertsCurrentRecord } = useSelector((state) => state.misc);
 
 
   return (
     <>
     <Container className="description-container ">
         <h4 className='description-title' >Description</h4>
-        <Row className='description-row' >{currentRecord?.description}Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-        Doloremque, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, quos.</Row>
+        <Row className='description-row' >{advertsCurrentRecord?.description}</Row>
 
     </Container>
     </>

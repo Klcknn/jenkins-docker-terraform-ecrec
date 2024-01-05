@@ -1,6 +1,7 @@
 package com.ph.service;
 
 import com.ph.domain.entities.Advert;
+import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.entities.User;
 import com.ph.domain.enums.Status;
@@ -9,10 +10,7 @@ import com.ph.exception.customs.RelatedFieldException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
-import com.ph.payload.response.TourRequestResponseSimple;
-import com.ph.payload.response.TourRequestsFullResponse;
-import com.ph.payload.response.TourRequestsStatusResponse;
-import com.ph.payload.response.TourRequestsResponse;
+import com.ph.payload.response.*;
 import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
@@ -116,7 +114,7 @@ public class TourRequestsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
         // Check if there is a conflict in tour time
-        if (tourRequestsRepository.existsByTourDateAndTourTime(request.getTourDate(), request.getTourTime())) {
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndAdvert_Id(request.getTourDate(), request.getTourTime(), tourRequest.getAdvert().getId())) {
             throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime())) {
@@ -143,7 +141,7 @@ public class TourRequestsService {
      * @param type        the type of sorting (asc/desc)
      * @return a pageable response of tour request status
      * @throws ResourceNotFoundException if the user is not found
-    */
+     */
     @Transactional
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(UserDetails userDetails, int page, int size, String sort, String type) {
         // Retrieve the user by email
@@ -205,13 +203,15 @@ public class TourRequestsService {
             return tourRequestsRepository.findAll(pageable).map(tourRequestsMapper::toTourRequestsFullResponse);
         }
         // Retrieve all tour requests using the pageable object
-        List<TourRequestsFullResponse> tourRequestResponses = tourRequestsRepository.findAll(pageable)
+        return tourRequestsRepository.search(query, pageable)
+                .map(tourRequestsMapper::toTourRequestsFullResponse);
+
+
+     /*   List<TourRequestsFullResponse> tourRequestResponses = tourRequestsRepository.findAll(pageable)
                 .stream()
                 .filter(tourRequest -> tourRequest.getAdvert().getTitle().toLowerCase().contains(query.toLowerCase()))
                 .map(tourRequestsMapper::toTourRequestsFullResponse)
-                .collect(Collectors.toList());
-        // Create a new PageImpl object with the filtered tour requests, pageable object, and total number of filtered tour requests
-        return new PageImpl<>(tourRequestResponses, pageable, tourRequestResponses.size());
+                .collect(Collectors.toList());*/
     }
 
     // Not :S03 - GetTourRequestByCustomerAsTourId() *******************************************************************
@@ -345,39 +345,55 @@ public class TourRequestsService {
         return tourRequests.map(tourRequestsMapper::toResponseSimple);
     }
 
-        // Not: getTourRequestCount
-        /**
-         * Retrieve the count of tour requests for a specific advertisement.
-         *
-         * @param advertId      the ID of the advertisement
-         * @param userDetails  the details of the authenticated user
-         * @return              the count of tour requests
-         * @throws ResourceNotFoundException if the user or advertisement is not found
-         */
-        public ResponseEntity<Long> getTourRequestCount(Long advertId, UserDetails userDetails) {
-            // Retrieve the user by email from the user service
-            User user = userService.getUserByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+    // Not: getTourRequestCount
 
-            // Retrieve the advertisement by ID from the advert service
-            Advert advert = advertService.getById(advertId);
+    /**
+     * Retrieve the count of tour requests for a specific advertisement.
+     *
+     * @param advertId    the ID of the advertisement
+     * @param userDetails the details of the authenticated user
+     * @return the count of tour requests
+     * @throws ResourceNotFoundException if the user or advertisement is not found
+     */
+    public ResponseEntity<Long> getTourRequestCount(Long advertId, UserDetails userDetails) {
+        // Retrieve the user by email from the user service
+        User user = userService.getUserByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
 
-            // Retrieve all advertowned by the user
-            List<Advert> advertList = advertService.getAllAdvertsByUserId(user.getId());
+        // Retrieve the advertisement by ID from the advert service
+        Advert advert = advertService.getById(advertId);
 
-            if (advertList.isEmpty()) {
-                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
-            }
+        // Retrieve all advertowned by the user
+        List<Advert> advertList = advertService.getAllAdvertsByUserId(user.getId());
 
-            // Check if the specified advertisement is in the user's list of advert
-            if (!advertList.contains(advert)) {
-                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
-            }
-
-            // Retrieve the count of tour requests for the specified advert and user
-            Long tourRequestCount = tourRequestsRepository.countByAdvert_IdAndOwnerUser_Id(advertId, user.getId());
-
-            // Return the count of tour requests as a ResponseEntity
-            return ResponseEntity.ok(tourRequestCount);
+        if (advertList.isEmpty()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
         }
+
+        // Check if the specified advertisement is in the user's list of advert
+//            if (!advertList.contains(advert)) {
+//                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
+//            }
+
+        // Retrieve the count of tour requests for the specified advert and user
+        Long tourRequestCount = tourRequestsRepository.countByAdvert_IdAndOwnerUser_Id(advertId, user.getId());
+
+        // Return the count of tour requests as a ResponseEntity
+        return ResponseEntity.ok(tourRequestCount);
+    }
+
+    // Not: getAllAdvertsByUserId
+    @Transactional
+    public ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(Long id, int page, String sort, int size, String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+        Page<TourRequest> tourRequests = tourRequestsRepository.findAllByGuestUser_Id(id, pageable);
+        Page<TourRequestsFullResponse> tourRequestsResponses = tourRequests
+                .map(tourRequestsMapper::toTourRequestsFullResponse);
+        return ResponseEntity.ok(tourRequestsResponses);
+    }
+
 }

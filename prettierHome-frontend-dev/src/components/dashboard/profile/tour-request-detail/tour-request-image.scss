@@ -6,7 +6,7 @@
     padding-left: 0;
     padding-right: 0;
    
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 767px) {
       width: 500px;
       height: 300px;
     }  
@@ -31,7 +31,7 @@
 
 .tour-request-image-row{
   
-   @media screen and (max-width: 768px) {
+   @media screen and (max-width: 767px) {
     width: 100%;
     height: 300px;
   }

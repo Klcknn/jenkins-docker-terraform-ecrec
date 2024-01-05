@@ -4,7 +4,6 @@ import { Container, ButtonGroup, Button } from "react-bootstrap";
 import { LiaSearchSolid } from "react-icons/lia";
 import { useToast } from "../../../store/providers/toast-provider";
 import { useDispatch } from "react-redux";
-import { setSearchParams } from "../../../store/slices/search-slice";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import { prepareRequestParams } from "../../../helpers/function/request-param-converter";
@@ -25,7 +24,8 @@ const Banner = () => {
   const fetchAdvertTypes = async () => {
     try {
       const data = await getAdvertTypes();
-      setAdvertTypes(data);
+      const filteredTypes = data.filter((type) => type.builtIn);
+      setAdvertTypes(filteredTypes);
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
       showToast({
@@ -40,7 +40,8 @@ const Banner = () => {
   const fetchCategories = async () => {
     try {
       const data = await getCategories();
-      setCategories(data);
+      const filteredCategories = data.filter((category) => category.builtIn);
+      setCategories(filteredCategories);
     } catch (err) {
       const errMsg = Object.values(err.response.data)[0];
       showToast({
@@ -69,26 +70,42 @@ const Banner = () => {
 
   return (
     <Container className="edit">
-      <div className="box">
-        <h1>
-          Easy Way to Find a <br /> Perfect Property
+      <div className="edit-box">
+        <h1 className="edit-box-h1">
+          Easy Way to Find a <br className="d-none d-lg-block" /> Perfect
+          Property
         </h1>
-        <ButtonGroup className="d-flex flex-column" aria-label="Basic example">
+        <ButtonGroup
+          className="d-flex flex-column align-items-center align-items-lg-start"
+          aria-label="Basic example"
+        >
           <div className="up-side">
             {advertTypes.map((type, index) => (
-              <Button
+              <a
                 key={index}
-                className="bg-white border-0"
                 onClick={() => setType(type.id)}
-              >{type.title}</Button>
+                className="edit-box-navLink"
+              >
+                {/* {type.title} */}
+                Buy
+              </a>
             ))}
+            {/* <a href="#" className="edit-box-navLink">
+              Buy
+            </a>
+            <a href="#" className="edit-box-navLink">
+              Rent
+            </a>
+            <a href="#" className="edit-box-navLink">
+              Sell
+            </a> */}
           </div>
-          <div className="bottom-side d-flex p-3 bg-white w-50 gap-2 ">
+          <div className="bottom-side d-flex p-3 bg-white gap-2">
             <input
               className="form-control mr-sm-2 border-0 rounded-3"
               type="search"
-              placeholder="Search"
-              aria-label="Search"
+              placeholder="Search best option for you"
+              aria-label="Search best option for you"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             ></input>
@@ -103,7 +120,7 @@ const Banner = () => {
             {categories.map((cat, index) => (
               <div className="radio-box" key={index}>
                 <input
-                  class="form-check-input"
+                  className="form-check-input"
                   type="radio"
                   name="ad-cat"
                   value={cat.id}

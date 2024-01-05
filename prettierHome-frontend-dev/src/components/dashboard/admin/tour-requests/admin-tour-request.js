@@ -3,7 +3,7 @@ import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Image as FullImage } from 'primereact/image';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { deleteTourRequest, getAllTourRequestByAdminManager } from '../../../../api/tour-requests-service';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiTrash } from "react-icons/fi";
@@ -16,7 +16,7 @@ import { PiHandPalmDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
 import { TbFaceIdError } from "react-icons/tb";
 import { useToast } from '../../../../store/providers/toast-provider';
-import { LiaSearchSolid } from 'react-icons/lia';
+import { HiMagnifyingGlass, HiXMark } from 'react-icons/hi2';
 
 
 
@@ -109,7 +109,6 @@ const AdminTourRequest = () => {
         });
       dispatch(setListRefreshToken(Math.random()))
     } catch (error) {
-      console.log(error); 
       showToast({
         severity: "error",
         summary: "Error",
@@ -125,7 +124,6 @@ const AdminTourRequest = () => {
   
   const handleEdit = (row) => {
     dispatch(setCurrentRecord(row));
-    // console.log("currentRecord", row);
     navigate('/dashboard/tour-requests/admin-tour-request-detail');
   };
 
@@ -196,9 +194,7 @@ const getProperty = (adminTourRequest) => {
     
       try {
         const resp = await getAllTourRequestByAdminManager(page, lazyState.rows, "tourDate", "desc", searchQuery);
-        // console.log(resp);
         setAdminTourRequest(resp.content);
-        // console.log(adminTourRequest);
         setTotalRows(resp.totalElements);
        
       } catch (err) {
@@ -286,33 +282,46 @@ const getProperty = (adminTourRequest) => {
 
 
   const handleSearch = () => {
+    const query = inputRef.current.value.trim();
     setSearchQuery(inputRef.current.value);
+    loadData(lazyState.page, query);
   };
 
-  const handleClearSearch = () => {
-    // Clear the input field and trigger a reload
-    inputRef.current.value = '';
-    handleSearch();
-  };
 
   return (
     <>
       <Container className="admin-tour-request-container" >
         <div className="search-tour-request ">
-          <span>
-            <Form.Control
-              type="text"
-              ref= {inputRef}
-              aria-label="Search"
-              placeholder="Search Tour Request"
-            />
-            <button className="btnSearch" onClick={handleSearch}>
-              <LiaSearchSolid size={25} color="white" />
-            </button>
-          </span>
-          <Button className="btnClearSearch" onClick={handleClearSearch}>
-                  Clear
+          <InputGroup className="search-input">
+          <Form.Control
+            aria-label="Search"
+            placeholder="Type Something"
+            ref={inputRef}
+          />
+          {searchQuery && (
+            <InputGroup.Text
+              className="clear-wrapper"
+              variant="outline-secondary"
+            >
+              <Button
+                className=" clear-btn btn-link"
+                onClick={() => setSearchQuery("")}
+              >
+                <HiXMark size={20} strokeWidth={0.5} />
+              </Button>
+            </InputGroup.Text>
+          )}
+
+          <Button
+            onClick={() => handleSearch()}
+            className="search-button"
+            variant="outline-secondary"
+          >
+            <HiMagnifyingGlass strokeWidth={1} />
           </Button>
+        </InputGroup>
+
+
         </div>
 
         <div className="tr-datatable-wrapper">

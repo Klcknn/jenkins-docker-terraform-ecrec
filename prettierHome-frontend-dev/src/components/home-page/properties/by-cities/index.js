@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Toast } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
+import { Pagination } from 'swiper/modules';
 import { getAdvertsByCities } from "../../../../api/adverts-service";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useToast } from "../../../../store/providers/toast-provider";
+import 'swiper/scss';
+import 'swiper/scss/pagination';
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
-const ExplorePropertiesByCities = () => {
+const ExploreByCities = () => {
   const [loading, setLoading] = useState(false);
   const [cities, setCities] = useState([]);
+  const navigate = useNavigate();
   const { showToast } = useToast();
 
   const fetchCities = async () => {
     try {
-      const resp = await getAdvertsByCities();
+      const resp = await getAdvertsByCities(10);
       setCities(resp);
-      console.log(resp);
     } catch (error) {
       const errMsg = Object.values(error.response.data)[0];
       showToast({
@@ -30,44 +34,55 @@ const ExplorePropertiesByCities = () => {
     fetchCities();
   }, []);
 
+
+  const handleSearch = (param) => {
+    navigate(`ad/search?city=${param}`);
+  }
+
+
   return (
     <>
-      <div className="type-properties">
-        <Container>
-          <div className="mb-4">
-            <h2>Explore Properties</h2>
-            <h5>By Cities</h5>
-          </div>
+      <Container className="city-statistics">
+        <div className="mb-4">
+          <h2>Explore Properties</h2>
+          <h5>By Cities</h5>
+        </div>
 
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={2}
-            breakpoints={{
-              768: { slidesPerView: 2 },
-              992: { slidesPerView: 3 },
-              1200: { slidesPerView: 4 },
-            }}
-          >
-            {cities.map((city, index) => (
-              <SwiperSlide key={index}>
-                <Card key={index} className="by-cities-card">
-                  <Card.Img
-                    src={`images/icons/icon-istanbul.jpg`}
-                    className="by-cities-card-img "
-                    alt="cities card"
-                  />
-                  <Card.ImgOverlay className="d-flex flex-column justify-content-center align-items-center ">
-                    <h3>{city.cityName}</h3>
-                    <h6>{city.cityQuantity} properties</h6>
-                  </Card.ImgOverlay>
-                </Card>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Container>
-      </div>
+        <Swiper
+          modules={[Pagination]}
+          pagination={{
+            dynamicBullets: true,
+            clickable: true
+          }}
+          spaceBetween={20}
+          slidesPerView={1}
+          breakpoints={{
+            450: { slidesPerView: 2 },
+            // 576: { slidesPerView: 2 },
+            992: { slidesPerView: 3 },
+            1200: { slidesPerView: 4 },
+          }}
+        >
+          {cities.map((city, index) => (
+            <SwiperSlide key={index} className="cities-slider">
+              <Card key={index} className="by-cities-card" onClick={() => handleSearch(city.cityId)}>
+                <Card.Img
+                  src={`images/cities/istanbul.jpg`}
+                  className="by-cities-card-img"
+                  alt="cities card"
+                />
+                <Card.ImgOverlay className="statistics">
+                  <h3>{city.cityName}</h3>
+                  <span className="ad-quantity">{city.cityQuantity}</span>
+                  <span>properties</span>
+                </Card.ImgOverlay>
+              </Card>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Container>
     </>
   );
 };
 
-export default ExplorePropertiesByCities;
+export default ExploreByCities;

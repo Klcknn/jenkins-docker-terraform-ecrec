@@ -1,23 +1,20 @@
-import { LiaSearchSolid } from "react-icons/lia";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button, Container } from "react-bootstrap";
-
+import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { FiTrash } from "react-icons/fi";
 import { LuPencil } from "react-icons/lu";
-import {
-  setCurrentRecord,
-  setListRefreshToken,
-} from "../../../../store/slices/misc-slice";
+import {setCurrentRecord, setListRefreshToken} from "../../../../store/slices/misc-slice";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "primereact/toast";
-import { ConfirmPopup } from "primereact/confirmpopup";
 import { prettyConfirm } from "../../../../helpers/function/toast-confirm";
 import { PiHandPalmDuotone } from "react-icons/pi";
 import { deleteUser, getUsers } from "../../../../api/user-service";
 import "../users/admin-users.scss";
+import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
+import { TbFaceIdError } from "react-icons/tb";
+import { IoMdCheckmarkCircleOutline, IoMdCloseCircleOutline } from "react-icons/io";
+import { useToast } from "../../../../store/providers/toast-provider";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -27,24 +24,7 @@ const Users = () => {
   const { listRefreshToken } = useSelector((state) => state.misc);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const toast = useRef(null);
-  console.log(users);
-  const showError = (errMsg) => {
-    toast.current.show({
-      severity: "error",
-      summary: "Error",
-      detail:`${errMsg}`,
-      life: 3000,
-    });
-  };
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
+  const { showToast } = useToast();
 
   const [lazyState, setlazyState] = useState({
     first: 0,
@@ -79,6 +59,7 @@ const Users = () => {
   };
 
   const userDecline = (event, row) => {
+    
     prettyConfirm({
       event: event,
       message: "Are you sure you want to delete the user?",
@@ -86,32 +67,37 @@ const Users = () => {
       acceptButtonType: "danger",
       handleAccept: () => handleDelete(row.id),
       handleReject: () => {
-        reject();
+        showToast({
+          severity: "warn",
+          summary: "Canceled",
+          detail: "User not deleted",
+          life: 2000,
+          icon: <IoMdCloseCircleOutline  size={50} />,
+        });
       },
     });
   };
-  const handleChange = () => {
-    if (inputRef.current.value.length === 0) {
-      setSearchText("");
-    }
-    console.log(inputRef.current.value)
-      setSearchText(inputRef.current.value);
 
+
+  const findUsers = () => {
+    loadData(0);
   };
 
   const loadData = async (page) => {
-    console.log(searchText);
     try {
       const resp = await getUsers(searchText, page, lazyState.rows);
-      console.log(resp);
       setUsers(resp.content);
-     
-      // console.log(tourRequest)
       setTotalRows(resp.totalElements);
     } catch (err) {
-      const errMsg = Object.values(err?.response?.data)[1]?.message
-       console.log(errMsg);
-      showError(errMsg);
+      const errMsg = err?.response?.data.message;
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: errMsg,
+        life: 3000,
+        icon: <TbFaceIdError   size={50} />,
+      });
+
     } finally {
       setLoading(false);
     }
@@ -120,17 +106,24 @@ const Users = () => {
   const handleDelete = async (id) => {
     try {
       await deleteUser(id);
-      toast.current.show({
-        severity: "Success",
-        summary: "Declined",
-        detail: "User declined",
-        life: 3000,
-        icon: <PiHandPalmDuotone size={50} />,
-      });
+      showToast({
+        severity: 'success',
+        summary: 'User deleted',
+        detail: 'User deleted successfully',
+        life: 2000,
+        icon: <IoMdCheckmarkCircleOutline  size={50} />,
+      })
       dispatch(setListRefreshToken(Math.random()));
     } catch (error) {
-      console.log(error); // TODO
-      showError("User deletion failed");
+      const errMsg = Object.values(error.response.data)[0];
+      showToast({
+        severity: "error",
+        summary: "Error!",
+        detail: errMsg,
+        life: 3000,
+        icon: <TbFaceIdError  size={50} />,
+      });
+
     } finally {
       setLoading(false);
     }
@@ -138,8 +131,8 @@ const Users = () => {
 
   const handleEdit = (row) => {
     dispatch(setCurrentRecord(row));
-    // console.log(row);
-    navigate("admin-user-edit");
+    navigate("admin-user-edit", { state: { ...row} });
+
   };
 
   const onPage = (event) => {
@@ -152,6 +145,14 @@ const Users = () => {
 
     return `${firstName} ${lastName}`;
   };
+  const clearSearch = () => {
+    setSearchText("");
+    setlazyState((prevLazyState) => ({
+      ...prevLazyState,
+      page: 0, // Sayfa numarasını sıfırla
+    }));
+  };
+  
 
   const narrowRowStyle = {
     display: "flex",
@@ -172,36 +173,46 @@ const Users = () => {
       {getOperationButtons(row)}
     </div>
   );
-  const inputRef = useRef(null);
-
 
   useEffect(() => {
-    
     loadData(lazyState.page);
-  }, [searchText, lazyState, listRefreshToken]);
+  }, [lazyState, listRefreshToken]);
 
   return (
     <>
-     
-      
-
-      <Toast ref={toast} />
-      <ConfirmPopup />
       <Container className="user-container">
-      <div className="search-div bottom-side d-flex  gap-2  mb-5 rounded-3">
-        <input
-          className="form-control mr-sm-2 border-0 rounded-3"
-          value={searchText}
-          type="search"
-          ref={inputRef}
-          placeholder="Search"
-          aria-label="Search"
-          onChange={() => handleChange()}
-        ></input>
-        <button className="btn btn-primary  rounded-3">
-          <LiaSearchSolid size={25} color="white" />
-        </button>
+      <div className="advert-types-page-search-div">
+        <InputGroup className="search-input">
+          <Form.Control
+            placeholder="Type Something"
+            x
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+          {searchText&& (
+            <InputGroup.Text
+              className="clear-wrapper"
+              variant="outline-secondary"
+            >
+              <Button
+                className=" clear-btn btn-link"
+                onClick={clearSearch}
+              >
+                <HiXMark size={20} strokeWidth={0.5} />
+              </Button>
+            </InputGroup.Text>
+          )}
+
+          <Button
+            onClick={() => findUsers()}
+            className="search-button"
+            variant="outline-secondary"
+          >
+            <HiMagnifyingGlass strokeWidth={1} />
+          </Button>
+        </InputGroup>
       </div>
+
 
         <div className="user-datatable-wrapper">
           <div className="user-card">
@@ -221,9 +232,13 @@ const Users = () => {
                 "PrevPageLink PageLinks CurrentPageReport NextPageLink"
               }
             >
-              <Column className="user-column" header="Name" body={fullName}></Column>
-              <Column field = "email" header="Email"></Column>
-              <Column field = "phone" header="Phone"></Column>
+              <Column
+                className="user-column"
+                header="Name"
+                body={fullName}
+              ></Column>
+              <Column field="email" header="Email"></Column>
+              <Column field="phone" header="Phone"></Column>
               <Column header="Action" body={operationButton}></Column>
             </DataTable>
           </div>
