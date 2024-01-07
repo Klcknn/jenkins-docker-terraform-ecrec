@@ -1,9 +1,9 @@
 version: '3'
 services:
   ui:
-    image: 'frontend:latest'
-    build:
-      context: ./prettierHome-frontend-dev
+    image: 835642848432.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+    # build:
+    #   context: ./prettierHome-frontend-dev
     container_name: prettierHome-frontend
     depends_on:
       - app
@@ -16,9 +16,9 @@ services:
     networks:
       - prettierHome-net
   app:
-    image: 'backend:latest'
-    build:
-      context: ./prettierHome-backend-dev
+    image: 835642848432.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+    # build:
+    #   context: ./prettierHome-backend-dev
     container_name: prettierHome-backend
     depends_on:
       - db
