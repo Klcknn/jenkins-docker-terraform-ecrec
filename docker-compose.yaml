@@ -47,6 +47,11 @@ services:
     networks:
       - prettierHome-net
 
+x-docker:
+  version: '3.8'
+  services:
+    db:
+      cgroup_driver: systemd
 volumes:
     db-data:
 networks:
