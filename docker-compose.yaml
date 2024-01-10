@@ -8,14 +8,14 @@ services:
     depends_on:
       - app
       - db
-      
     ports:
       - "80:3000"
     environment: 
       - REACT_APP_BASE_URL=http://app:8092
       - REACT_APP_RECAPTCHA_SECRET_KEY=6Lcl5R0pAAAAALmw9VGsPrJGtskYgAar9pb21RAJ
-    networks:
-      - prettierHome-net
+    # networks:
+    #   - prettierHome-net
+    network_mode: host
   app:
     image: 835642848432.dkr.ecr.us-east-1.amazonaws.com/backend:latest
     # build:
@@ -30,8 +30,9 @@ services:
     environment:
       - DATABASE_URL=jdbc:mysql://database-1.ciedjrms6nte.us-east-1.rds.amazonaws.com:5432/webappdb
      #- DATABASE_URL=jdbc:postgresql://db:5432/carrental
-    networks:
-      - prettierHome-net
+    network_mode: host
+    # networks:
+    #   - prettierHome-net
           
   db:
     image: 'postgres:13.1-alpine'
@@ -40,17 +41,15 @@ services:
       - POSTGRES_USER=kenanklc
       - POSTGRES_PASSWORD=kenanklc76
       - POSTGRES_DB=webappdb
-
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data/
-    networks:
-      - prettierHome-net
-
+    network_mode: host
+    # networks:
+    #   - prettierHome-net
 volumes:
     db-data:
-networks:
-    prettierHome-net:
-        driver: host
-        #driver: bridge
+# networks:
+#     prettierHome-net:
+#         driver: bridge
